@@ -1,0 +1,189 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:Poppins;
+            display: flex;
+            height: 100vh;
+            background-color: #e8eef2;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 50px;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                padding: 30px 30px;
+            }
+
+            .dashboard-grid {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-large {
+                grid-row: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 80px 20px 20px 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-large {
+            grid-row: span 2;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 40px;
+        }
+
+        .donut-chart {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .chart-number {
+            font-size: 56px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+
+        .chart-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .legend-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .legend-label {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .legend-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-count {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .legend-percent {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .tasks-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .tasks-list li {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .tasks-list li::before {
+            content: "•";
+            position: absolute;
+            left: -20px;
+            color: #666;
+            font-size: 20px;
+        }
+
+        .missed-number {
+            font-size: 100px;
+            font-weight: 700;
+            text-align: center;
+            color: #1a1a1a;
+            margin-top: 40px;
+        }
