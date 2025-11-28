@@ -1,6 +1,7 @@
 <?php
 if (isset($_POST['username']) && isset($_POST['password'])){
     include "../config/db_connection.php";
+    include 'includes/toast.php'; 
 
     function validate_input($data){
         $data = trim($data);
@@ -51,6 +52,11 @@ if (isset($_POST['username']) && isset($_POST['password'])){
                         $_SESSION['fullname'] = $db_fullname;
                         $_SESSION['id'] = $db_id;
                         $_SESSION['department'] = null;
+                        $_SESSION['toast'] = [
+                            'type' => 'success',  // success, error, warning, info
+                            'title' => 'Success!',
+                            'message' => 'Logged in Successfully!'
+                        ];
                         header("Location: ../dashboard.php");
                         exit();
                     }else if($db_role == 2){
@@ -61,6 +67,11 @@ if (isset($_POST['username']) && isset($_POST['password'])){
                         $_SESSION['department_id'] = $db_department_id;
                         $_SESSION['fullname'] = $db_fullname;
                         $_SESSION['id'] = $db_id;
+                         $_SESSION['toast'] = [
+                            'type' => 'success',  // success, error, warning, info
+                            'title' => 'Success!',
+                            'message' => 'Logged in Successfully!'
+                        ];
                         header("Location: ../dashboard.php");
                         exit();
                     }else if($db_role == 3){
@@ -71,6 +82,11 @@ if (isset($_POST['username']) && isset($_POST['password'])){
                         $_SESSION['department_id'] = $db_department_id;
                         $_SESSION['fullname'] = $db_fullname;
                         $_SESSION['id'] = $db_id;
+                        $_SESSION['toast'] = [
+                            'type' => 'success',  // success, error, warning, info
+                            'title' => 'Success!',
+                            'message' => 'Logged in Successfully!'
+                        ];
                         header("Location: ../dashboard.php");
                         exit();
                   }
