@@ -144,6 +144,20 @@
             background-color: #d4edda;
             color: #155724;
         }
+        .priority-high {
+            color: #f44336;
+            font-weight: 600;
+        }
+
+        .priority-medium {
+            color: #2196f3;
+            font-weight: 600;
+        }
+
+        .priority-low {
+            color: #4caf50;
+            font-weight: 600;
+        }
 
         .pagination {
             display: flex;
