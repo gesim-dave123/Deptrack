@@ -3,7 +3,7 @@ session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
     if (isset($_POST['taskTitle']) && isset($_POST['description']) && isset($_POST['deadline']) && isset($_POST['priority']) && isset($_POST['assignTo'])) {
-        include "../db_connection.php";
+        include "../config/db_connection.php";
 
         function validate_input($data){
             $data = trim($data);
@@ -40,9 +40,12 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 $stmt = $conn->prepare($sql);
                 $stmt->execute([$title, $description, $deadline, $priority, $assignTo, $assigned_by, $department_id]);
                 //for notification
-                $sql_notification = "INSERT INTO notification (message, recepient_id, type) VALUES (?, ?, ?)";
+
+                $task_id = $conn->lastInsertId();
+
+                $sql_notification = "INSERT INTO notification (message, recepient_id, type,date,task_id) VALUES (?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql_notification);
-                $stmt->execute([$description,$assignTo,$priority]);
+                $stmt->execute([$description,$assignTo,$priority,$deadline,$task_id]);
 
                 header("Location: ../manage_tasks.php?success=Task Created Successfully");
                 exit();
