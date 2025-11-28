@@ -10,6 +10,7 @@
 <body>
     <form action="app/login.php" method="POST">
       <div class="login-container">
+        <?php include 'inc/toast.php'; ?>
           <h1>Welcome to DepTrack!</h1>
           <p class="subtitle">Enter to login</p>
           <!-- <?php
