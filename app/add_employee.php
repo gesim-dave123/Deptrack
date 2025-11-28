@@ -3,7 +3,7 @@ session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
     if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email'])) {
-        include "../db_connection.php";
+        include "../config/db_connection.php";
 
         function validate_input($data){
             $data = trim($data);
@@ -40,11 +40,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
             if( count($result_username ) > 0){
                 $em = "Username Taken";
-                header("Location: ../login.php?error=$em");
+                header("Location: ../manage_employees.php?error=$em");
                 exit();
             }else if( count ($result_email) > 0){
                 $em = "Email Taken";
-                header("Location: ../login.php?error=$em");
+                header("Location: ../manage_employees.php?error=$em");
                 exit();
             }else{
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);

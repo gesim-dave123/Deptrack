@@ -3,7 +3,7 @@ session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     include 'config/db_connection.php';
     include 'utils/users.php';
-
+    
     $department_id = $_SESSION['department_id'];
     $user_id = $_SESSION['id'];
     $completed_tasks = get_completed_tasks($conn, $department_id, $user_id);
@@ -14,7 +14,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task History</title>
-    <link rel="stylesheet" href="styles/task_history.css?v=1.0">
+    <link rel="stylesheet" href="styles/task_history.css?v=2.0">
     <link rel="stylesheet" href="styles/nav.css?v=1.0">
 </head>
 <body>
