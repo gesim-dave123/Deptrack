@@ -35,6 +35,7 @@ CREATE TABLE notifications (
     recepient_id INT NOT NULL,
     type  VARCHAR(50) NOT NULL,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_read BOOLEAN DAFAULT FALSE,
     FOREIGN KEY (recepient_id) REFERENCES user(id)   
 )

@@ -59,7 +59,8 @@ function get_notifications($conn, $user_id) {
         n.notification_id, 
         n.message, 
         n.date, 
-        n.is_read, 
+        n.is_read,
+        created_At, 
         t.title AS task_title, 
         t.due_date AS task_due_date, 
         t.priority AS task_priority

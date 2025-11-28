@@ -14,7 +14,6 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
             header("Location: ../my_task.php?error=$em");
             exit();
         }
-        
         // Validate status value
         $validStatuses = ['In Progress', 'Completed', 'Pending'];
         if (!in_array($newStatus, $validStatuses)) {
@@ -23,11 +22,14 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
             exit();
         }
         
-        // Update query
+        // Update query in the task table
         $sql = "UPDATE tasks SET status = ? WHERE task_id = ?";
         $stmt = $conn->prepare($sql);
+
         
         if ($stmt->execute([$newStatus, $taskId])) {
+            // $sql_update = "INSERT INTO task_updates (task_id,user_id,status)";
+            // $stmt = $conn->prepare($sql_update);
             echo "Task status updated successfully!";
         } else {
            echo "Failed to update task status";
