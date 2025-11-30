@@ -1,9 +1,8 @@
 <?php
-session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
     if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email'])) {
-        include "../config/db_connection.php";
+        include "../../config/db_connection.php";
 
         function validate_input($data){
             $data = trim($data);
@@ -23,7 +22,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
         if(empty($username) || empty($password) || empty($fullname) || empty($email)){
             $em = "Field Required";
-            header("Location: ../login.php?error=$em");
+            header("Location: ../../public/pages/login.php?error=$em");
             exit();
 
         }else{   
@@ -40,11 +39,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
             if( count($result_username ) > 0){
                 $em = "Username Taken";
-                header("Location: ../manage_employees.php?error=$em");
+                 header("Location: ../../public/pages/manage_employees.php?error=$em");;
                 exit();
             }else if( count ($result_email) > 0){
                 $em = "Email Taken";
-                header("Location: ../manage_employees.php?error=$em");
+                header("Location:  ../../public/pages/manage_employees.php?error=$em");
                 exit();
             }else{
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
@@ -52,20 +51,20 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 $sql = "INSERT INTO users (username, hashed_password, full_name, email, role_id, department_id,created_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->execute([$username, $hashed_password, $fullname, $email, $role_id,$department_id, $created_by]);
-                header("Location: ../manage_employees.php?success=Account Created Successfully");
+                header("Location:  ../../public/pages/manage_employees.php?success=Account Created Successfully");
                 exit();
             }
         }
     }else{
          $em = "Login First";
-         header("Location: ../manage_employees.php?error=$em");
+         header("Location: ../../public/pages/login.php?error=$em");
          exit();
 
         
     }
 }else{
     $em = "Login First";
-    header("Location: ../login.php?error=$em");
+     header("Location: ../../public/pages/login.php?error=$em");
     exit();
 }
 

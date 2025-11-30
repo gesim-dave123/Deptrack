@@ -16,7 +16,7 @@ if($role!= 'Super Admin'){?>
 
         <!-- Modal Body -->
         <div class="modal-body">
-            <form id="employeeForm" action="app/add_employee.php" method="POST">
+            <form id="employeeForm" action="../handlers/addEmployee_handler.php" method="POST">
                 <!-- First Name and Last Name Row -->
                 <div class="form-row">
                     <div class="form-group"> 

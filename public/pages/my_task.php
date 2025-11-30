@@ -1,12 +1,13 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
-    include 'config/db_connection.php';
-    include 'utils/users.php';
+    include '../../config/db_connection.php';
+    include '../../app/controllers/users.php';
 
     $department_id = $_SESSION['department_id'];
     $user_id = $_SESSION['id'];   
     $pending_tasks = get_all_my_tasks($conn, $department_id, $user_id);
+   
    
 ?>
 <!DOCTYPE html>
@@ -15,11 +16,13 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tasks</title>
-    <link rel="stylesheet" href="styles/my_tasks.css?v=1.0">
-    <link rel="stylesheet" href="styles/nav.css?v=1.0">
+    <link rel="stylesheet" href="../styles/my_tasks.css?v=1.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>
-    <?php include 'inc/nav.php'; ?>
+
+    <?php include '../inc/nav.php'; ?>
+    <?php include '../inc/toast.php'; ?>
     <div class="main-content">
         <h1 class="page-title">My Tasks</h1>
 
@@ -47,7 +50,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             <button class="close-btn" onclick="closeUpdateModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="updateStatusForm" action="utils/update_task_status.php" method="POST">
+            <form id="updateStatusForm" action="../handlers/updateTask_handler.php" method="POST">
                 <input type="hidden" name="task_id" id="taskIdInput" value="">
                 <div class="status-buttons">
                     <button type="submit" class="status-btn in-progress" name="status" value="In Progress">
@@ -163,7 +166,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 <?php 
 } else {
     $em = "Login First";
-    header("Location: ../login.php?error=$em");
+    header("Location: login.php?error=$em");
     exit();
 }
 ?>

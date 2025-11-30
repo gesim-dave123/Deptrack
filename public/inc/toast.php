@@ -206,9 +206,7 @@
                 <div class="toast-title">${title}</div>
                 <div class="toast-message">${message}</div>
             </div>
-            <button class="toast-close" onclick="closeToast(this)">
-                <i class="fas fa-times"></i>
-            </button>
+         
             <div class="toast-progress"></div>
         `;
         
@@ -240,12 +238,20 @@
         const urlParams = new URLSearchParams(window.location.search);
         const successMsg = urlParams.get('success');
         const errorMsg = urlParams.get('error');
+        const infoMsg = urlParams.get('info');
+        const warningMsg = urlParams.get('warning');
         
         if (successMsg) {
             showToast('success', 'Success!', decodeURIComponent(successMsg));
         }
         if (errorMsg) {
             showToast('error', 'Error!', decodeURIComponent(errorMsg));
+        }
+        if (infoMsg) {
+            showToast('info', 'Info!', decodeURIComponent(infoMsg));
+        }
+        if (warningMsg) {
+            showToast('warning', 'Warning!', decodeURIComponent(warningMsg));
         }
         
         <?php

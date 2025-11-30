@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DepTrack - Streamline Team Productivity</title>
-    <link rel="stylesheet" href="styles\homepage.css">
+    <link rel="stylesheet" href="../styles/homepage.css">
 </head>
 <body>
     <header>
         <div class="logo">
             <div class="logo-icon">
-                <img src ="images\logo.png">
+                <img src ="../images/logo.png">
             </div>
             <span>DepTrack</span>
         </div>
         <nav>
-            <a href="#index.html">Home</a>
+            <a href="">Home</a>
             <a href="#about">About Us</a>
             <a href="#faq">FAQ</a>
             <a href="#help">Help</a>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="image">
-            <img src="images\HomepageImage.png" id="homeImg">
+            <img src="../images\HomepageImage.png" id="homeImg">
         </div>
     </section>
 </body>

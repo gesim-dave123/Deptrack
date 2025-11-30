@@ -1,12 +1,13 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
-    include 'config/db_connection.php';
-    include 'utils/users.php';
+    include '../../config/db_connection.php';
+    include '../../app/controllers/users.php';
     
     $department_id = $_SESSION['department_id'];
     $user_id = $_SESSION['id'];
     $completed_tasks = get_completed_tasks($conn, $department_id, $user_id);
+    //  print_r($completed_tasks);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,11 +15,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task History</title>
-    <link rel="stylesheet" href="styles/task_history.css?v=2.0">
-    <link rel="stylesheet" href="styles/nav.css?v=1.0">
+    <link rel="stylesheet" href="../styles/task_history.css?v=2.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>
-    <?php include 'inc/nav.php'; ?>
+    <?php include '../inc/nav.php'; ?>
     <div class="main-content">
         <h1 class="page-title">Task History</h1>     
        <div class="task-container">
@@ -175,7 +176,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 <?php 
 } else {
     $em = "Login First";
-    header("Location: ../login.php?error=$em");
+    header("Location: login.php?error=$em");
     exit();
 }
 ?>

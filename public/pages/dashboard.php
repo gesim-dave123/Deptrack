@@ -1,5 +1,7 @@
 <?php
-session_start();
+
+require_once '../../app/Middlewares/auth_check.php';
+
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 ?>
 <!DOCTYPE html>
@@ -8,11 +10,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Dashboard</title>
-    <link rel="stylesheet" href="styles/dashboard.css?v=1.0">
-    <link rel="stylesheet" href="styles/nav.css?v=2.0">
+    <link rel="stylesheet" href="../styles/dashboard.css?v=1.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=2.0">
 </head>
 <body>
-    <?php include 'inc/nav.php'; ?>
+    <?php include '../inc/nav.php'; ?>
    
 
     <div class="main-content">
@@ -87,12 +89,33 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             </div>
         </div>
     </div>
+     <script>
+        // Force reload when page is loaded from cache (back button)
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+
+        // Check session when page becomes visible
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                fetch('check_session.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.logged_in) {
+                            window.location.href = '../public/login.php?error=Session expired';
+                        }
+                    });
+            }
+        });
+    </script>
 </body>
 </html>
 <?php 
 } else {
     $em = "Login First";
-    header("Location: ../login.php?error=$em");
+    header("Location: ../public/login.php?error=$em");
     exit();
 }
 ?>

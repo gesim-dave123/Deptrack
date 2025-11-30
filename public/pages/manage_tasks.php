@@ -1,8 +1,9 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
-    include 'config/db_connection.php';
-    include 'utils/users.php';
+   include '../../config/db_connection.php';
+   include '../../app/controllers/users.php';
+    
     $employees = get_all_employees($conn, $_SESSION['department_id']);
     $tasks = get_all_tasks($conn, $_SESSION['department_id']);
    
@@ -13,13 +14,14 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Tasks</title>
-    <link rel="stylesheet" href="styles/manage_tasks.css?v=3.0">
-    <link rel="stylesheet" href="styles/nav.css?v=2.0">
-    <link rel="stylesheet" href="styles/createTaskModal.css?v=2.0">
+    <link rel="stylesheet" href="../styles/manage_tasks.css?v=3.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=2.0">
+    <link rel="stylesheet" href="../styles/createTaskModal.css?v=2.0">
 </head>
 <body>
 
-    <?php include 'inc/nav.php'; ?> 
+    <?php include '../inc/nav.php'; ?>
+    <?php include '../inc/toast.php'; ?>  
     <div class="main-content">
         <h1 class="page-title">Manage Tasks</h1>
          <div class="header">
@@ -27,7 +29,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 <span>+</span> Create Task
             </button>
         </div>
-        <?php include 'inc/createTaskModal.php'; ?>
+        <?php include '../inc/createTaskModal.php'; ?>
 
         <div class="task-container">
             <div class="controls">
@@ -279,7 +281,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 <?php 
 } else {
     $em = "Login First";
-    header("Location: ../login.php?error=$em");
+    header("Location: login.php?error=$em");
     exit();
 } 
 ?>

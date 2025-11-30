@@ -3,37 +3,40 @@ session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     include 'config/db_connection.php';
     include 'utils/users.php';
-    $employees = get_all_employees($conn, $_SESSION['department_id']);
+    $Accounts = get_all_accounts($conn);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Employees</title>
-    <link rel="stylesheet" href="styles/manage_employees.css?v=3.0">
-    <link rel="stylesheet" href="styles/nav.css">
+    <title>Manage Accounts</title>
+    <link rel="stylesheet" href="styles/manageAccounts.css?v=3.0">
+    <link rel="stylesheet" href="styles/nav.css?v=1.0">
     <link rel="stylesheet" href="styles/addEmployeeModal.css">
 </head>
 <body>
     <?php include 'inc/nav.php'; ?>
      <div class="main-content">
-        <h1 class="page-title">Manage Employees</h1>
+        <h1 class="page-title">Manage Accounts</h1>
         <div class="header">
-            <button class="add-employee-btn" onclick="openModal()">+ Add Employee</button>
+            <button class="add-employee-btn" onclick="openModal()">+ Add Account</button>
         </div>
         <?php include 'inc/addEmployeeModal.php'; ?>
         <div class="table-container">
             <input type="text" class="search-box" placeholder="Search" onkeyup="searchTable()">
-            <?php if(empty($employees)){         
+            <?php if(empty($Accounts)){         
             ?>
             <table id="employeeTable">
                 <thead>
                     <tr>
                         <th>Fullname</th>
                         <th>Username</th>
-                        <th>Email</th>
                         <th>Role</th>
+                        <th>Department</th>
+                        <th>Hire Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -48,24 +51,27 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                     <tr>
                         <th>Fullname</th>
                         <th>Username</th>
-                        <th>Email</th>
                         <th>Role</th>
+                        <th>Department</th>
+                        <th>Hire Date</th>
                         <th>Action</th>
                     </tr>
-                    <?php foreach($employees as $employee){ ?>
+                    <?php foreach($Accounts as $Account){ ?>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><?=$employee['full_name'] ?></td>
-                        <td><?=$employee['username'] ?></td>
-                        <td><?=$employee['email'] ?></td>
+                        <td><?=$Account['full_name'] ?></td>
+                        <td><?=$Account['username'] ?></td>
+                        <td><?=$Account['role_name'] ?></td>
+                        <td><?=$Account['department_name'] ?></td>
+                        <td><?=$Account['hire_date'] ?></td>
                         <td>Employee</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-edit" onclick="editEmployee(<?php echo $employee['id']; ?>)">
+                                <button class="btn-edit" onclick="editEmployee(<?php echo $Account['id']; ?>)">
                                     <span class="icon-edit"></span> Edit
                                 </button>
-                                <button class="btn-delete" onclick="deleteEmployee(<?php echo $employee['id']; ?>)">
+                                <button class="btn-delete" onclick="deleteEmployee(<?php echo $Account['id']; ?>)">
                                     <span class="icon-delete"></span>
                                 </button>
                             </div>
@@ -133,6 +139,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 firstName: document.getElementById('firstName').value,
                 lastName: document.getElementById('lastName').value,
                 username: document.getElementById('username').value,
+
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value
             };
@@ -158,7 +165,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 <?php 
 } else {
     $em = "Login First";
-    header("Location: ../login.php?error=$em");
+    header("Location: login.php?error=$em");
     exit();
 }
 ?>

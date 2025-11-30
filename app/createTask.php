@@ -1,9 +1,8 @@
 <?php
-session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
     if (isset($_POST['taskTitle']) && isset($_POST['description']) && isset($_POST['deadline']) && isset($_POST['priority']) && isset($_POST['assignTo'])) {
-        include "../config/db_connection.php";
+        include "../../config/db_connection.php";
 
         function validate_input($data){
             $data = trim($data);
@@ -20,7 +19,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
         if(empty($title) || empty( $description) || empty($deadline) || empty($priority) || empty($assignTo)){
             $em = "Field Required";
-            header("Location: ../manage_tasks.php?error=$em");
+            header("Location: ../../public/pages/manage_tasks.php?error=$em");
             exit();
             
         }else{   
@@ -29,9 +28,9 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             $stmt_taskTitle->execute([$title]); 
             $result_taskTitle = $stmt_taskTitle->fetchAll();
 
-            if(count($result_taskTitle ) > 0){
+            if(count($result_taskTitle ) ){
                 $em = "Task already exists";
-                header("Location: ../manage_tasks.php?error=$em");
+                header("Location: ../../public/pages/manage_tasks.php?error=$em");
                 exit();
             }else{
                 $assigned_by = $_SESSION['id'];
@@ -47,18 +46,19 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 $stmt = $conn->prepare($sql_notification);
                 $stmt->execute([$description,$assignTo,$priority,$deadline,$task_id]);
 
-                header("Location: ../manage_tasks.php?success=Task Created Successfully");
+                $em = "Task created successfully";
+                header("Location: ../../public/pages/manage_tasks.php?success=$em");
                 exit();
             }
         }
     }else{
          $em = "Login First";
-         header("Location: ../manage_employees.php?error=$em");
+         header("Location: ../../public/pages/login.php?error=$em");;
          exit();
     }
 }else{
     $em = "Login First";
-    header("Location: ../login.php?error=$em");
+    header("Location: ../../public/pages/login.php?error=$em");;
     exit();
 }
 ?>

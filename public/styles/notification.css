@@ -100,7 +100,7 @@
             align-items: center;
             padding: 20px;
             margin-bottom: 15px;
-            background: #f9fafb; /* default background */
+            background: #b9b9b9; /* default background */
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
@@ -113,8 +113,8 @@
 
         /* New style for read notifications */
         .notification-item.read {
-            background: #d1fae5; /* green-ish for read */
-            color: #4b5563;
+            background: #ececec; /* green-ish for read */
+            color: #b2b7be;
         }
         .notification-icon {
             width: 40px;

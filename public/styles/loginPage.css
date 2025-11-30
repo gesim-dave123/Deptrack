@@ -1,12 +1,11 @@
-
-        * {
+ * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family:Poppins;
+            font-family: Poppins, sans-serif;
             background-color: #f5f5f5;
             display: flex;
             justify-content: center;
@@ -22,6 +21,52 @@
             padding: 50px 40px;
             width: 100%;
             max-width: 420px;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .shake {
+            animation: shake 0.6s;
+            border-color: #dc3545 !important;
+        }
+
+        .login-container.shake {
+            animation: shake 0.6s;
+        }
+
+        /* Error Message Styling */
+        .error-message {
+            background-color: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message i {
+            font-size: 16px;
         }
 
         h1 {
@@ -42,29 +87,30 @@
         .input-group {
             margin-bottom: 24px;
         }
+
         .password-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .password-wrapper input {
-        width: 100%;
-        padding: 10px 40px 10px 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 14px;
+            width: 100%;
+            padding: 14px 40px 14px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 15px;
         }
 
         .toggle-password {
-        position: absolute;
-        right: 10px;
-        cursor: pointer;
-        color: #666;
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            color: #666;
         }
 
         .toggle-password:hover {
-        color: #2e7d32; /* green tint */
+            color: #2e7d32;
         }
 
         label {
@@ -93,6 +139,11 @@
             background-color: white;
             border-color: #1a5f5f;
             box-shadow: 0 0 0 3px rgba(26, 95, 95, 0.1);
+        }
+
+        input.error {
+            border-color: #dc3545;
+            background-color: #fff5f5;
         }
 
         input::placeholder {

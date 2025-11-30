@@ -14,7 +14,7 @@
 
         <!-- Modal Body -->
         <div class="modal-body">
-            <form id="taskForm" action="app/createTask.php" method="POST">
+            <form id="taskForm" action="../handlers/createTask_handler.php" method="POST">
                 <!-- Task Title -->
                 <div class="form-group">
                     <label for="taskTitle">Task Title</label>

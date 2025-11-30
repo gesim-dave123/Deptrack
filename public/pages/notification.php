@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
-    include 'config/db_connection.php';
-    include 'utils/users.php';
+    include '../../config/db_connection.php';
+    include '../../app/controllers/users.php';
     
     $role = $_SESSION['role'];
     $user_id = $_SESSION['id'];
@@ -26,11 +26,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notifications</title>
-    <link rel="stylesheet" href="styles/notification.css?v=1.0">
-    <link rel="stylesheet" href="styles/nav.css?v=1.0">
+    <link rel="stylesheet" href="../styles/notification.css?v=1.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>
-    <?php include 'inc/nav.php'; ?>
+    <?php include '../inc/nav.php'; ?>
    
     <div class="main-content">
         <h1>Notifications</h1>
@@ -65,7 +65,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             
             list.innerHTML = data.map((item, index) => `
                 <div class="notification-item ${item.is_read == 0 ? 'read' : ''}" onclick="openModal(${index})">
-                    <img class="notification-icon" src="images/noti.png" alt="Notifications">
+                    <img class="notification-icon" src="../images/noti.png" alt="Notifications">
                     <div class="notification-text">
                         <strong>New ${currentTab === 'tasks' ? 'task' : 'comment'} ${currentTab === 'tasks' ? 'assigned' : 'received'}: "${item.task_title}"</strong>. Click here to view it. (${item.created_At.split(" ")[0]})
                     </div>
