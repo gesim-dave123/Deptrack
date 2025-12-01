@@ -26,14 +26,15 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notifications</title>
-    <link rel="stylesheet" href="../styles/notification.css?v=1.0">
+    <link rel="stylesheet" href="../styles/notification.css?v=3.0">
     <link rel="stylesheet" href="../styles/nav.css?v=1.0">
+    
 </head>
 <body>
     <?php include '../inc/nav.php'; ?>
    
     <div class="main-content">
-        <h1>Notifications</h1>
+        <h1 class="page-title">Notifications</h1>
 
         <div class="notification-container">
             <div class="tabs">

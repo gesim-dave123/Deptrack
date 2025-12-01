@@ -58,7 +58,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     
     if ($username !== $user['username'] || !password_verify($password, $user['hashed_password'])) {
         $em = "Invalid Credentials";
-        // header("Location: ../../public/pages/login.php?error=$em");
+        header("Location: ../../public/pages/login.php?error=$em");
         exit();
     }
 
