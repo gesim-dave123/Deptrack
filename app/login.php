@@ -91,7 +91,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     }
 
   
-    header("Location: ../../public/pages/dashboard.php");
+    header("Location: ../../public/inc/loading.php");
     exit();
 }
 ?>

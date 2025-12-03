@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
-    include 'config/db_connection.php';
-    include 'utils/users.php';
+    include '../../config/db_connection.php';
+    include '../../app/controllers/users.php';
     $Accounts = get_all_accounts($conn);
 
 
@@ -13,18 +13,18 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Accounts</title>
-    <link rel="stylesheet" href="styles/manageAccounts.css?v=3.0">
-    <link rel="stylesheet" href="styles/nav.css?v=1.0">
-    <link rel="stylesheet" href="styles/addEmployeeModal.css">
+    <link rel="stylesheet" href="../styles/manageAccounts.css?v=3.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=1.0">
+    <link rel="stylesheet" href="../styles/addEmployeeModal.css">
 </head>
 <body>
-    <?php include 'inc/nav.php'; ?>
+    <?php include '../inc/nav.php'; ?>
      <div class="main-content">
         <h1 class="page-title">Manage Accounts</h1>
         <div class="header">
             <button class="add-employee-btn" onclick="openModal()">+ Add Account</button>
         </div>
-        <?php include 'inc/addEmployeeModal.php'; ?>
+        <?php include '../inc/addEmployeeModal.php'; ?>
         <div class="table-container">
             <input type="text" class="search-box" placeholder="Search" onkeyup="searchTable()">
             <?php if(empty($Accounts)){         
@@ -68,10 +68,10 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                         <td>Employee</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-edit" onclick="editEmployee(<?php echo $Account['id']; ?>)">
+                                <button class="btn-edit"b>
                                     <span class="icon-edit"></span> Edit
                                 </button>
-                                <button class="btn-delete" onclick="deleteEmployee(<?php echo $Account['id']; ?>)">
+                                <button class="btn-delete">
                                     <span class="icon-delete"></span>
                                 </button>
                             </div>

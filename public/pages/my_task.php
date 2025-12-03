@@ -7,6 +7,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     $department_id = $_SESSION['department_id'];
     $user_id = $_SESSION['id'];   
     $pending_tasks = get_all_my_tasks($conn, $department_id, $user_id);
+    $taskData = get_notifications($conn, $user_id);
    
    
 ?>

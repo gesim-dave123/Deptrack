@@ -6,6 +6,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     
     $employees = get_all_employees($conn, $_SESSION['department_id']);
     $tasks = get_all_tasks($conn, $_SESSION['department_id']);
+    $taskData = get_notifications($conn, $_SESSION['id']);
    
 ?>
 <!DOCTYPE html>
@@ -14,14 +15,15 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Tasks</title>
-    <link rel="stylesheet" href="../styles/manage_tasks.css?v=3.0">
-    <link rel="stylesheet" href="../styles/nav.css?v=2.0">
+    <link rel="stylesheet" href="../styles/manage_tasks.css?v=2.1">
+    <link rel="stylesheet" href="../styles/nav.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../styles/createTaskModal.css?v=2.0">
 </head>
 <body>
 
-    <?php include '../inc/nav.php'; ?>
-    <?php include '../inc/toast.php'; ?>  
+    <?php include '../inc/nav.php'; 
+    include '../inc/toast.php'; ?>
+     
     <div class="main-content">
         <h1 class="page-title">Manage Tasks</h1>
          <div class="header">
@@ -275,7 +277,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         // Initial render
         renderTasks();
     </script>
-    </div>
+    
 </body>
 </html>
 <?php 
