@@ -56,9 +56,10 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                                 <th>Role</th>
                                 <th>Action</th>
                             </tr>
-                            <?php foreach($employees as $employee){ ?>
+                          
                         </thead>
                         <tbody>
+                            <?php foreach($employees as $employee){ ?>
                             <tr>
                                 <td><?=$employee['full_name'] ?></td>
                                 <td><?=$employee['username'] ?></td>
@@ -66,10 +67,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                                 <td>Employee</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="btn-edit" onclick="editEmployee(<?php echo $employee['id']; ?>)">
+                                       <button class="btn-edit" onclick="openEditModal(this)">
                                             <span class="icon-edit"></span> Edit
                                         </button>
-                                        <button class="btn-delete" onclick="deleteEmployee(<?php echo $employee['id']; ?>)">
+                                        <?php include '../inc/editAccountModal.php'; ?>
+                                        <button class="btn-delete" onclick="openModal(this)">
                                             <span class="icon-delete"></span>Delete
                                         </button>
                                     </div>
@@ -81,81 +83,8 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
               </div>
              <?php } ?>
         </div>
-        <!-- <-- Edit - mOdal --> 
-        <div id="editModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modalTitle">Edit Employee</h2>
-                    <button class="close" onclick="closeEditModal()">&times;</button>
-                </div>
-                <form id="employeeForm">
-                    <div class="form-group">
-                        <label for="fullname">Full Name</label>
-                        <input type="text" id="fullname" name="fullname" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <input type="text" id="role" name="role" value="Employee" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn-save">Save Changes</button>
-                        <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-            <!-- <-- Delete - mOdal -->                        
-          <div id="deleteModal" class="modal">
-                <div class="modal-content confirm-modal-content">
-                    <h2>Delete Employee</h2>
-                    <p>Are you sure you want to delete this employee? This action cannot be undone.</p>
-                    <div class="modal-footer">
-                        <button class="btn-save btn-delete-confirm" onclick="confirmDelete()">Delete</button>
-                        <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-       </div>
 
     <script>
-
-         function openEditModal(button) {
-            isAddMode = false;
-            currentRow = button.closest('tr');
-            document.getElementById('modalTitle').textContent = 'Edit Employee';
-            
-            const cells = currentRow.querySelectorAll('td');
-            document.getElementById('fullname').value = cells[0].textContent;
-            document.getElementById('username').value = cells[1].textContent;
-            document.getElementById('email').value = cells[2].textContent;
-            document.getElementById('role').value = cells[3].textContent;
-            
-            document.getElementById('editModal').classList.add('show');
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.remove('show');
-            currentRow = null;
-        }
-
-        function openDeleteModal(button) {
-            currentRow = button.closest('tr');
-            document.getElementById('deleteModal').classList.add('show');
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('show');
-            currentRow = null;
-        }
-
         function searchTable() {
             const input = document.querySelector('.search-box');
             const filter = input.value.toLowerCase();
@@ -180,10 +109,20 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             document.getElementById('employeeModal').classList.add('active');
             document.getElementById('modalOverlay').classList.add('active');
         }
+        function openEditModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('editEmployeeModal').classList.add('active');
+        }
+        function openDeleteModal() {
+            document.getElementById('deleteEmployeeModal').classList.add('active');
+            document.getElementById('modalOverlay').classList.add('active');
+        }
 
         function closeModal() {
             document.getElementById('employeeModal').classList.remove('active');
             document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('editEmployeeModal').classList.remove('active');
+            
         }
 
         function handleSubmit(event) {
