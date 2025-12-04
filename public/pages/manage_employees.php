@@ -67,10 +67,13 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                                 <td>Employee</td>
                                 <td>
                                     <div class="action-buttons">
-                                       <button class="btn-edit" onclick="openEditModal(this)">
+                                       <button class="btn-edit" onclick="openEditModal( '<?php echo htmlspecialchars($employee['id'], ENT_QUOTES, 'UTF-8'); ?>',
+                                                                                        '<?php echo htmlspecialchars($employee['full_name'], ENT_QUOTES, 'UTF-8'); ?>',
+                                                                                        '<?php echo htmlspecialchars($employee['username'], ENT_QUOTES, 'UTF-8'); ?>',
+                                                                                        '<?php echo htmlspecialchars($employee['email'], ENT_QUOTES, 'UTF-8'); ?>')">
                                             <span class="icon-edit"></span> Edit
                                         </button>
-                                        <?php include '../inc/editAccountModal.php'; ?>
+                                       
                                         <button class="btn-delete" onclick="openModal(this)">
                                             <span class="icon-delete"></span>Delete
                                         </button>
@@ -80,6 +83,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                         </tbody>
                         <?php } ?>
                     </table>
+                     <?php include '../inc/editAccountModal.php'; ?>
               </div>
              <?php } ?>
         </div>
@@ -109,7 +113,20 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             document.getElementById('employeeModal').classList.add('active');
             document.getElementById('modalOverlay').classList.add('active');
         }
-        function openEditModal() {
+        function openEditModal(id,fullname,username,email) {
+               
+            fullname = fullname.trim();        
+            let firstName = fullname.substring(0, fullname.lastIndexOf(" "));
+            let lastName = fullname.substring(fullname.lastIndexOf(" ") + 1);
+            if (fullname.indexOf(" ") === -1) {
+                firstName = fullname;
+                lastName = "";
+            }
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_firstName').value = firstName;
+            document.getElementById('edit_lastName').value = lastName;
+            document.getElementById('edit_username').value = username;
+            document.getElementById('edit_email').value = email;
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('editEmployeeModal').classList.add('active');
         }
