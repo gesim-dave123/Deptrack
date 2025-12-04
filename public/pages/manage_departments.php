@@ -8,11 +8,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Departments</title>
-    <link rel="stylesheet" href="styles/manageDepartments.css?v=1.0">
-    <link rel="stylesheet" href="styles/nav.css?v=1.0">
+    <link rel="stylesheet" href="../styles/manageDepartments.css?v=1.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>
-    <?php include 'inc/nav.php'; ?>
+    <?php include '../inc/nav.php'; ?>
    
 
     <div class="main-content">

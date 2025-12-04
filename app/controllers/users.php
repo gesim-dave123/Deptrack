@@ -67,7 +67,7 @@ function get_notifications($conn, $user_id) {
         FROM notification n
         LEFT JOIN tasks t ON n.task_id = t.task_id
         WHERE n.recepient_id = ?
-        ORDER BY n.date DESC;";
+        ORDER BY created_At DESC;";
         $stmt = $conn->prepare($sql);
     $stmt->execute([$user_id]);
     if ($stmt->rowCount() == 0) {
@@ -96,5 +96,33 @@ function get_all_accounts($conn) {
     return $stmt->fetchAll();
 }
 
+function get_chart_data($conn, $user_id) {
+    $sql = "SELECT 
+                status,
+                COUNT(*) AS total
+            FROM tasks
+            WHERE assigned_to = ?
+            GROUP BY status";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+    if ($stmt->rowCount() == 0) {
+        return [];
+    }
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function set_Noti_isread($conn, $notification_id) {
+    
+        $sql = "UPDATE notification SET isread = 1 WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$notification_id]);
+        
+        if ($stmt->rowCount() == 0) {
+            return false;
+         }
+        return;
+}
 
 ?>
