@@ -1,6 +1,8 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
+    
+    $taskData = get_notifications($conn, $_SESSION['id']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,11 +10,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboards</title>
-    <link rel="stylesheet" href="styles/leaderboards.css?v=2.0">
-    <link rel="stylesheet" href="styles/nav.css?v=1.0">
+    <link rel="stylesheet" href="../styles/leaderboards.css?v=2.0">
+    <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>
-    <?php include 'inc/nav.php'; ?>
+    <?php include '../inc/nav.php'; ?>
     
     <div class="main-content">
         <h1 class="page-title">Leaderboards</h1>

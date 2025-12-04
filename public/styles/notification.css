@@ -18,8 +18,8 @@
 
         .page-title {
             font-size: 36px;
-            color: #333;
-            font-weight: 700;
+            font-weight: 600;
+            color: #1a1a1a;
             margin-bottom: 30px;
         }
 
@@ -100,7 +100,7 @@
             align-items: center;
             padding: 20px;
             margin-bottom: 15px;
-            background: #b9b9b9; /* default background */
+            background: white; 
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
@@ -111,11 +111,13 @@
             transform: translateX(5px);
         }
 
-        /* New style for read notifications */
+        /* Style for read notifications */
         .notification-item.read {
-            background: #ececec; /* green-ish for read */
-            color: #b2b7be;
+            background: #f0f0f0; /* Light green */
+            color: #2d3748;
         }
+
+
         .notification-icon {
             width: 40px;
             height: 40px;

@@ -7,6 +7,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     $department_id = $_SESSION['department_id'];
     $user_id = $_SESSION['id'];   
     $pending_tasks = get_all_my_tasks($conn, $department_id, $user_id);
+    $taskData = get_notifications($conn, $user_id);
    
    
 ?>
@@ -16,7 +17,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tasks</title>
-    <link rel="stylesheet" href="../styles/my_tasks.css?v=1.0">
+    <link rel="stylesheet" href="../styles/my_tasks.css?v=2.0">
     <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>

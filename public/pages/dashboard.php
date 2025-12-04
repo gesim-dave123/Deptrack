@@ -3,6 +3,27 @@
 require_once '../../app/Middlewares/auth_check.php';
 
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
+    include '../../config/db_connection.php';
+    include '../../app/controllers/users.php';
+    
+
+    $dashboard_data = get_chart_data($conn, $_SESSION['id']);
+        
+    $cleanData = [
+        "Completed" => 0,
+        "Pending" => 0,
+        "InProgress" => 0
+    ];
+
+    foreach ($dashboard_data as $row) {
+        if ($row['status'] === "Completed") $cleanData["Completed"] = $row["total"];
+        if ($row['status'] === "Pending") $cleanData["Pending"] = $row["total"];
+        if ($row['status'] === "In Progress") $cleanData["InProgress"] = $row["total"];
+    }
+    $taskData = get_notifications($conn, $_SESSION['id']);
+    // print_r($cleanData);
+
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,104 +31,146 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Dashboard</title>
-    <link rel="stylesheet" href="../styles/dashboard.css?v=1.0">
+    <link rel="stylesheet" href="../styles/dashboard.css?v=3.0">
     <link rel="stylesheet" href="../styles/nav.css?v=2.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+        <!-- GitHub Calendar CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/github-calendar/dist/github-calendar-responsive.css">
+
+    <!-- GitHub Calendar JS -->
+    <script src="https://unpkg.com/github-calendar/dist/github-calendar.min.js"></script>
+
 </head>
 <body>
-    <?php include '../inc/nav.php'; ?>
+    <?php include '../inc/nav.php';
+          include '../inc/toast.php';
+    ?>
+
    
 
     <div class="main-content">
         <h1 class="page-title">Dashboard</h1>
+       
         
         <div class="dashboard-grid">
             <div class="card card-large">
                 <h2 class="card-title">Task Status Overview</h2>
                 
-                <div class="chart-container">
-                    <svg class="donut-chart" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#5a6c7d" stroke-width="20" 
-                                stroke-dasharray="62.83 251.33" stroke-dashoffset="0"></circle>
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#f39c12" stroke-width="20" 
-                                stroke-dasharray="75.4 251.33" stroke-dashoffset="-62.83"></circle>
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#27ae60" stroke-width="20" 
-                                stroke-dasharray="113.1 251.33" stroke-dashoffset="-138.23"></circle>
-                    </svg>
-                    <div class="chart-center">
-                        <div class="chart-number">120</div>
-                        <div class="chart-label">Total Tasks</div>
+                <div class="content">
+                    <div class="chart-wrapper">
+                        <canvas id="taskChart"></canvas>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-item completed">
+                            <div class="stat-color"></div>
+                            <div class="stat-info">
+                                <h3>Completed</h3>
+                                <p id="completedCount">0</p>
+                            </div>
+                            <div class="stat-percentage" id="completedPercent">0%</div>
+                        </div>
+
+                        <div class="stat-item in-progress">
+                            <div class="stat-color"></div>
+                            <div class="stat-info">
+                                <h3>In Progress</h3>
+                                <p id="inProgressCount">0</p>
+                            </div>
+                            <div class="stat-percentage" id="inProgressPercent">0%</div>
+                        </div>
+
+                        <div class="stat-item incoming">
+                            <div class="stat-color"></div>
+                            <div class="stat-info">
+                                <h3>Pending</h3>
+                                <p id="incomingCount">0</p>
+                            </div>
+                            <div class="stat-percentage" id="incomingPercent">0%</div>
+                        </div>
+
+                        <div class="total-tasks">
+                            <h3>Total Tasks</h3>
+                            <div class="number" id="totalTasks">0</div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-left">
-                            <div class="legend-color" style="background-color: #27ae60;"></div>
-                            <span class="legend-label">Completed</span>
-                        </div>
-                        <div class="legend-right">
-                            <span class="legend-count">54</span>
-                            <span class="legend-percent">45%</span>
-                        </div>
+                    <div class="heatmap-wrapper">
+                        <div id="github-calendar"></div>
                     </div>
-                    
-                    <div class="legend-item">
-                        <div class="legend-left">
-                            <div class="legend-color" style="background-color: #f39c12;"></div>
-                            <span class="legend-label">In Progress</span>
-                        </div>
-                        <div class="legend-right">
-                            <span class="legend-count">36</span>
-                            <span class="legend-percent">30%</span>
-                        </div>
-                    </div>
-                    
-                    <div class="legend-item">
-                        <div class="legend-left">
-                            <div class="legend-color" style="background-color: #5a6c7d;"></div>
-                            <span class="legend-label">Incoming</span>
-                        </div>
-                        <div class="legend-right">
-                            <span class="legend-count">30</span>
-                            <span class="legend-percent">25%</span>
-                        </div>
-                    </div>
+               
                 </div>
-            </div>
-
-            <div class="card">
-                <h2 class="card-title">Tasks in Progress</h2>
-                <ul class="tasks-list">
-                    <li>Revise All Transactions</li>
-                    <li>Record Meeting Minutes</li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <h2 class="card-title">Missed Tasks</h2>
-                <div class="missed-number">0</div>
             </div>
         </div>
     </div>
      <script>
-        // Force reload when page is loaded from cache (back button)
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
-        });
+const taskData = <?php echo json_encode($cleanData); ?>;
 
-        // Check session when page becomes visible
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                fetch('check_session.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.logged_in) {
-                            window.location.href = '../public/login.php?error=Session expired';
-                        }
-                    });
+// Calculate totals
+const total = taskData.Completed + taskData.InProgress + taskData.Pending;
+
+const completedPercent   = Math.round((taskData.Completed / total) * 100);
+const inProgressPercent  = Math.round((taskData.InProgress / total) * 100);
+const pendingPercent     = Math.round((taskData.Pending / total) * 100);
+
+// Update stat numbers
+document.getElementById('completedCount').textContent = taskData.Completed;
+document.getElementById('inProgressCount').textContent = taskData.InProgress;
+document.getElementById('incomingCount').textContent = taskData.Pending;
+document.getElementById('totalTasks').textContent = total;
+
+// Update percentages
+document.getElementById('completedPercent').textContent = completedPercent + '%';
+document.getElementById('inProgressPercent').textContent = inProgressPercent + '%';
+document.getElementById('incomingPercent').textContent = pendingPercent + '%';
+
+const ctx = document.getElementById('taskChart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Completed', 'In Progress', 'Pending'],
+        datasets: [{
+            data: [
+                taskData.Completed,
+                taskData.InProgress,
+                taskData.Pending
+            ],
+            backgroundColor: ['#15af39', '#0598b3', '#f1bb19'],
+            borderColor: ['#15af39', '#0598b3', '#f1bb19'],
+            borderWidth: 3,
+            borderRadius: 8,
+            spacing: 3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '70%',
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleFont: { size: 14, weight: 'bold' },
+                bodyFont: { size: 13 },
+                cornerRadius: 8,
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.parsed + ' tasks';
+                    }
+                }
             }
+        }
+    }
+});
+         GitHubCalendar("#github-calendar", "your-github-username", {
+            responsive: true, // make it responsive
+            global_stats: false // optionally hide total contributions
         });
     </script>
 </body>
