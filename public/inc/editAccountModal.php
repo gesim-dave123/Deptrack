@@ -9,49 +9,53 @@ if($role!= 'Super Admin'){?>
         <div class="modal-header">
             <div class="modal-title">
                 <h2>Edit Employee</h2>
-                <div class="modal-subtitle">Enter Employee details</div>
+                <div class="modal-subtitle">Edit Employee details</div>
             </div>
             <button class="close-btn" onclick="closeModal()">&times;</button>
         </div>
 
         <!-- Modal Body -->
         <div class="modal-body">
-            <form id="employeeForm" action="../handlers/editEmployee_handler.php" method="POST">
+            <form id="editEmployeeForm" action="../handlers/editAccount_handler.php" method="POST">
                 <!-- First Name and Last Name Row -->
                 <div class="form-row">
                     <div class="form-group"> 
-                        <label for="firstName">Full Name</label>
-                        <input type="text" id="firstName" name="firstName" placeholder=$employee['fullname'] required>
+                        <label for="edit_firstName">Full Name</label>
+                        <input type="text" id="edit_firstName" name="edit_firstName" placeholder="Firstname" >
                     </div>
                     <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" placeholder="Lastname" required>
+                        <label for="edit_lastName">Last Name</label>
+                        <input type="text" id="edit_lastName" name="edit_lastName" placeholder=" Lastname" >
                     </div>
                 </div>
 
                 <!-- Username -->
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder=$employee['username']  required>
+                    <label for="edit_username">Username</label>
+                    <input type="text" id="edit_username" name="edit_username" placeholder="Username" >
                 </div>
 
                 <!-- Email -->
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder=$employee['email'] required>
+                    <label for="edit_email">Email</label>
+                    <input type="email" id="edit_email" name="edit_email" placeholder="Email">
                 </div>
 
                 <!-- Password -->
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <label for="edit_password">Password</label>
+                    <input type="password" id="edit_password" name="edit_password" placeholder="Password" >
+                </div>
+                 <!-- id -->
+                <div class="form-group">
+                    <input type="hidden" id="edit_id" name="edit_id" value="">
                 </div>
             </form>
         </div>
 
         <!-- Modal Footer -->
         <div class="modal-footer">
-            <button type="submit" form="employeeForm" class="add-btn">Save Changes</button>
+            <button type="submit" form="editEmployeeForm" class="add-btn">Save Changes</button>
         </div>
     </div>
 <?php }else{?>
