@@ -14,7 +14,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <title>Manage Employees</title>
     <link rel="stylesheet" href="../styles/manage_employees.css?v=4.0">
     <link rel="stylesheet" href="../styles/nav.css">
-    <link rel="stylesheet" href="../styles/addEmployeeModal.css">
+    <link rel="stylesheet" href="../styles/addEmployeeModal.css?v=2.1">
 </head>
 <body>
     <?php include '../inc/nav.php'; ?>
@@ -74,7 +74,10 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                                             <span class="icon-edit"></span> Edit
                                         </button>
                                        
-                                        <button class="btn-delete" onclick="openModal(this)">
+                                        <button class="btn-delete" onclick="openDeleteModal('<?php echo htmlspecialchars($employee['id'], ENT_QUOTES, 'UTF-8'); ?>',
+                                                                                        '<?php echo htmlspecialchars($employee['full_name'], ENT_QUOTES, 'UTF-8'); ?>',
+                                                                                        '<?php echo htmlspecialchars($employee['username'], ENT_QUOTES, 'UTF-8'); ?>',
+                                                                                        '<?php echo htmlspecialchars($employee['email'], ENT_QUOTES, 'UTF-8'); ?>')">
                                             <span class="icon-delete"></span>Delete
                                         </button>
                                     </div>
@@ -84,6 +87,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                         <?php } ?>
                     </table>
                      <?php include '../inc/editAccountModal.php'; ?>
+                     <?php include '../inc/deleteModal.php'; ?>
               </div>
              <?php } ?>
         </div>
@@ -130,15 +134,21 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('editEmployeeModal').classList.add('active');
         }
-        function openDeleteModal() {
-            document.getElementById('deleteEmployeeModal').classList.add('active');
+       function openDeleteModal(id,fullname,username,email) {
+            document.getElementById('delete_id').value = id;
+            document.getElementById('employeeName').textContent = fullname;
+            document.getElementById('employeeUsername').textContent = username;
+            document.getElementById('employeeEmail').textContent = email;
             document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('deleteEmployeeModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             document.getElementById('employeeModal').classList.remove('active');
             document.getElementById('modalOverlay').classList.remove('active');
             document.getElementById('editEmployeeModal').classList.remove('active');
+            document.getElementById('deleteEmployeeModal').classList.remove('active');
             
         }
 
