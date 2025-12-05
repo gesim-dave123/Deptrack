@@ -20,8 +20,8 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         $id = validate_input($_POST['edit_id']);
 
 
-        if(empty($username) || empty($password) || empty($fullname) || empty($email)){
-            $em = "Field Required";
+        if(empty($username) || empty($fullname) || empty($email)){ 
+            $em = "Fieldsdsds Required";
             header("Location: ../../public/pages/manage_employee.php?error=$em");
             exit();
 
