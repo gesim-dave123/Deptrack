@@ -80,14 +80,15 @@ function get_notifications($conn, $user_id) {
 function get_all_accounts($conn) {
     $sql = "SELECT 
         u.full_name,
+        u.id,
         u.username,
         u.hire_date,
+        u.email,
         r.role_name,
         d.department_name
     FROM users u
     LEFT JOIN roles r ON u.role_id = r.role_id
-    LEFT JOIN departments d ON u.department_id = d.department_id
-    WHERE u.role_id != 1;";
+    LEFT JOIN departments d ON u.department_id = d.department_id";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     if ($stmt->rowCount() == 0) {
@@ -124,5 +125,15 @@ function set_Noti_isread($conn, $notification_id) {
          }
         return;
 }
-
+function get_all_departments($conn) {
+    
+        $sql = "SELECT department_name from departments ";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        
+        if ($stmt->rowCount() == 0) {
+            return [];
+         }
+        return $stmt->fetchAll();
+}
 ?>

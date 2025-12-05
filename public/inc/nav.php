@@ -151,7 +151,7 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="manage_accounts.php" class=>
+                <a href="manage_employees.php" class=>
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
