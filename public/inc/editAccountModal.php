@@ -78,24 +78,24 @@ if($role != 'Super Admin'){?>
                 <div class="form-row">
                     <div class="form-group"> 
                         <label for="edit_firstName">First Name</label>
-                        <input type="text" id="edit_firstName" name="edit_firstName" placeholder="Firstname" required>
+                        <input type="text" id="edit_firstName" name="edit_firstName" placeholder="Firstname">
                     </div>
                     <div class="form-group">
                         <label for="edit_lastName">Last Name</label>
-                        <input type="text" id="edit_lastName" name="edit_lastName" placeholder="Lastname" required>
+                        <input type="text" id="edit_lastName" name="edit_lastName" placeholder="Lastname">
                     </div>
                 </div>
 
                 <!-- Username -->
                 <div class="form-group">
                     <label for="edit_username">Username</label>
-                    <input type="text" id="edit_username" name="edit_username" placeholder="Username" required>
+                    <input type="text" id="edit_username" name="edit_username" placeholder="Username" >
                 </div>
 
                 <!-- Email -->
                 <div class="form-group">
                     <label for="edit_email">Email</label>
-                    <input type="email" id="edit_email" name="edit_email" placeholder="Email" required>
+                    <input type="email" id="edit_email" name="edit_email" placeholder="Email" >
                 </div>
 
                 <!-- Password -->
