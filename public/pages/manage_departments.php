@@ -1,10 +1,13 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
-     include '../../config/db_connection.php';
+    include '../../config/db_connection.php';
     include '../../app/controllers/users.php';
+
+    $departments =get_all_department($conn);
     
-    $taskData = get_notifications($conn, $_SESSION['id']);
+    // Assuming get_notifications is defined and available
+    $taskData = get_notifications($conn, $_SESSION['id']); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,32 +15,28 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Departments</title>
-    <link rel="stylesheet" href="../styles/manageDepartments.css?v=2.0">
+    <link rel="stylesheet" href="../styles/manageDepartments.css?v=4.0">
     <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>
     <?php include '../inc/nav.php'; ?>
-   
+    <?php include '../inc/toast.php'; ?>
+    
 
     <main class="main-content">
-            <div class="page-header">
-                <h1 class="page-title">Manage Departments</h1>
-                <button class="add-department-btn" onclick="openAddModal()">
-                    <span>+</span> Add Department
-                </button>
-            </div>
+        <div class="page-header">
+            <h1 class="page-title">Manage Departments</h1>
+            <button class="add-department-btn" onclick="openAddModal()">
+                <span>+</span> Add Department
+            </button>
+        </div>
 
-            <!-- Departments Grid -->
-            <div class="departments-grid" id="departmentsGrid">
-                <!-- Department cards will be inserted here -->
+        <div class="departments-grid" id="departmentsGrid">
             </div>
-        </main>
-    </div>
+    </main>
 
-    <!-- Modal Overlay -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
 
-    <!-- View Department Details Modal -->
     <div class="modal" id="viewDepartmentModal">
         <div class="modal-header">
             <div class="modal-title">
@@ -75,7 +74,6 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         </div>
     </div>
 
-    <!-- Add Department Modal -->
     <div class="modal" id="addDepartmentModal">
         <div class="modal-header">
             <div class="modal-title">
@@ -86,8 +84,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         </div>
 
         <div class="modal-body">
-            <form id="addDepartmentForm">
-                <!-- Department Information Section -->
+            <form id="addDepartmentForm" action>
                 <div class="section-header">📋 Department Information</div>
 
                 <div class="form-group">
@@ -100,19 +97,16 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                     <textarea id="deptDescription" name="deptDescription" placeholder="Describe the department's responsibilities and purpose" required></textarea>
                 </div>
 
-                <!-- Icon Selector -->
                 <div class="form-group icon-selector">
                     <label>Select Department Icon *</label>
-                    <div class="help-text">Choose an icon that represents this department</div>
+                    <div class="help-text">Choose an emoji that represents this department</div>
                     <input type="hidden" id="selectedIcon" name="selectedIcon" required>
                     <div class="icon-grid" id="iconGrid">
-                        <!-- Icons will be inserted here -->
-                    </div>
+                        </div>
                 </div>
 
                 <div class="section-divider"></div>
 
-                <!-- Admin Account Section -->
                 <div class="section-header">👤 Create Admin Account</div>
 
                 <div class="form-row">
@@ -151,43 +145,17 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     </div>
 
     <script>
-      const departmentIcons = [
+        const departmentIcons = [
             '💻', '🏢', '📊', '💰', '📈', '🎯', '🔧', '⚙️', '🎨', '📱',
             '🌐', '📞', '🎓', '🏥', '🔬', '📦', '🚚', '🏭', '🛠️', '📢'
         ];
-
-        // Sample department data
-        const departments = [
-            {
-                id: 1,
-                name: 'Engineering',
-                description: 'Responsible for software development, system architecture, and technical infrastructure',
-                employees: 24,
-                admin: 'John Doe',
-                icon: '💻'
-            },
-            {
-                id: 2,
-                name: 'Human Resources',
-                description: 'Manages employee relations, recruitment, and organizational development',
-                employees: 8,
-                admin: 'Jane Smith',
-                icon: '👥'
-            },
-            {
-                id: 3,
-                name: 'Marketing',
-                description: 'Handles brand strategy, digital marketing, and customer engagement',
-                employees: 15,
-                admin: 'Mike Johnson',
-                icon: '📢'
-            }
-        ];
+    
+        const departments = <?php echo json_encode($departments); ?>;
 
         let selectedDepartment = null;
         let selectedIcon = null;
 
-        // Render department cards
+        // Render department cards - UPDATED STRUCTURE
         function renderDepartments() {
             const grid = document.getElementById('departmentsGrid');
             
@@ -202,22 +170,28 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             }
 
             grid.innerHTML = departments.map(dept => `
-                <div class="department-card" onclick="viewDepartment(${dept.id})">
-                    <div class="department-icon">${dept.icon}</div>
-                    <div class="department-name">${dept.name}</div>
+                <div class="department-card" onclick="viewDepartment(${dept.department_id})">
+                    <div class="card-header">
+                        <div class="department-icon-placeholder">${dept.department_icon}</div>
+                        <div class="department-name">${dept.department_name}</div>
+                    </div>
+                    <div class="department-description">${dept.department_description.substring(0, 70) + (dept.department_description.length > 70 ? '...' : '')}</div>
                     <div class="department-stats">
                         <div class="stat-item">
                             <span class="stat-label">Employees</span>
-                            <span class="stat-value">${dept.employees}</span>
+                            <span class="stat-value">${dept.user_count}</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Admin</span>
-                            <span class="stat-value">${dept.admin.split(' ')[0]}</span>
+                            <span class="stat-value">${dept.admin_name.split(' ')[0]}</span>
                         </div>
+                        <div class="card-action-btn">View Details &rarr;</div>
                     </div>
                 </div>
             `).join('');
         }
+
+        // --- Other JavaScript functions (renderIconSelector, selectIcon, viewDepartment, openAddModal, addDepartment, editDepartment, closeModal) remain the same ---
 
         // Render icon selector
         function renderIconSelector() {
@@ -243,14 +217,14 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
         // View department details
         function viewDepartment(id) {
-            selectedDepartment = departments.find(d => d.id === id);
+            selectedDepartment = departments.find(d => d.department_id === id);
             if (!selectedDepartment) return;
 
-            document.getElementById('viewDeptName').textContent = selectedDepartment.name;
-            document.getElementById('viewDeptNameValue').textContent = selectedDepartment.name;
-            document.getElementById('viewDeptDescription').textContent = selectedDepartment.description;
-            document.getElementById('viewDeptEmployees').textContent = selectedDepartment.employees;
-            document.getElementById('viewDeptAdmin').textContent = selectedDepartment.admin;
+            document.getElementById('viewDeptName').textContent = selectedDepartment.department_name;
+            document.getElementById('viewDeptNameValue').textContent = selectedDepartment.department_name;
+            document.getElementById('viewDeptDescription').textContent = selectedDepartment.department_description;
+            document.getElementById('viewDeptEmployees').textContent = selectedDepartment.user_count;
+            document.getElementById('viewDeptAdmin').textContent = selectedDepartment.admin_name;
 
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('viewDepartmentModal').classList.add('active');
@@ -269,70 +243,106 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         }
 
         // Add new department
-        function addDepartment() {
-            // Get department info
-            const deptName = document.getElementById('deptName').value.trim();
-            const deptDescription = document.getElementById('deptDescription').value.trim();
-            const icon = document.getElementById('selectedIcon').value;
-            
-            // Get admin info
-            const firstName = document.getElementById('adminFirstName').value.trim();
-            const lastName = document.getElementById('adminLastName').value.trim();
-            const username = document.getElementById('adminUsername').value.trim();
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value;
+       // ... existing JavaScript variables and functions ...
 
-            // Validation
-            if (!deptName || !deptDescription || !icon) {
-                alert('Please fill in all department information and select an icon');
-                return;
-            }
+// New function to handle department creation and submission
+// ... (lines 700-725 in manage_departments.php)
 
-            if (!firstName || !lastName || !username || !email || !password) {
-                alert('Please fill in all admin account information');
-                return;
-            }
+// New function to handle department creation and submission
+function addDepartment() {
+    // 1. Get Department Information
+    const deptName = document.getElementById('deptName').value.trim();
+    const deptDescription = document.getElementById('deptDescription').value.trim();
+    const icon = document.getElementById('selectedIcon').value;
+    
+    // 2. Get Admin Information
+    const firstName = document.getElementById('adminFirstName').value.trim();
+    const lastName = document.getElementById('adminLastName').value.trim();
+    const username = document.getElementById('adminUsername').value.trim();
+    const email = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value;
+    const fullName= firstName + " "+ lastName; // CRITICAL: This variable must be defined here.
 
-            if (password.length < 8) {
-                alert('Password must be at least 8 characters');
-                return;
-            }
+    // 3. Validation (Keep your existing validation logic here)
+    if (!deptName || !deptDescription || !icon) {
+        alert('Please fill in all department information and select an icon');
+        return;
+    }
+    
+    if (!firstName || !lastName || !username || !email || !password) {
+        alert('Please fill in all admin account information');
+        return;
+    }
 
-            // Create new department with admin
-            const newDept = {
-                id: departments.length + 1,
-                name: deptName,
-                description: deptDescription,
-                employees: 0,
-                admin: `${firstName} ${lastName}`,
-                icon: icon
-            };
+    if (password.length < 8) {
+        alert('Password must be at least 8 characters');
+        return;
+    }
 
-            // In a real application, you would send this to your backend:
-            const departmentData = {
-                department: {
-                    name: deptName,
-                    description: deptDescription,
-                    icon: icon
-                },
-                admin: {
-                    firstName: firstName,
-                    lastName: lastName,
-                    username: username,
-                    email: email,
-                    password: password,
-                    role: 'Admin'
-                }
-            };
-
-            console.log('Creating department and admin:', departmentData);
-
-            departments.push(newDept);
-            renderDepartments();
-            closeModal();
-            alert(`Department "${deptName}" created successfully!\nAdmin account created for ${firstName} ${lastName}`);
+    // 4. Prepare the Data Payload (matching the JSON format)
+    const departmentData = {
+        action: 'createDepartment', 
+        department: {
+            name: deptName,
+            description: deptDescription,
+            icon: icon
+        },
+        admin: {
+            fullName: fullName,
+            username: username,
+            email: email,
+            password: password,
+            role: 2 
         }
+    };
 
+    // 5. Send Data to PHP Backend using Fetch
+    fetch('../../app/addDepartment.php', { // NOTE: Corrected path from your previous attempt
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(departmentData)
+    })
+    .then(response => {
+        // Handle non-JSON responses (for debugging)
+        if (!response.ok) {
+            console.error('HTTP Error:', response.statusText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log('Server Response:', result);
+        if (result.success) {
+            
+            const newDeptId = result.department_id; 
+            
+            // 🐛 FIX APPLIED HERE: Use the database-style keys for the local object
+            const newDept = {
+                department_id: newDeptId, 
+                department_name: deptName,
+                department_description: deptDescription,
+                user_count: 1, // Initial employee count is 0
+                admin_name: fullName,
+                department_icon: icon
+            };
+            
+            departments.push(newDept); 
+            renderDepartments();       
+            closeModal();             
+            alert(`Department "${deptName}" created successfully!`);
+
+        } else {
+            
+            console.error('Failed to create department:', result.error);
+        }
+    })
+    .catch(error => {
+        console.error('Network Error during department creation:', error);
+        alert('An unexpected error occurred. Check the console for details.');
+    });
+}
         // Edit department (placeholder)
         function editDepartment() {
             alert('Edit functionality would open an edit form here');
