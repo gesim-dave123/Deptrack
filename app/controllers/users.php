@@ -136,4 +136,31 @@ function get_all_departments($conn) {
          }
         return $stmt->fetchAll();
 }
+
+function get_all_department($conn) {
+    $sql = "SELECT 
+                d.department_id,
+                d.department_name,
+                d.department_description,
+                d.department_icon,
+                admin.full_name AS admin_name,
+                COUNT(u.id) AS user_count
+            FROM departments d
+            LEFT JOIN users AS admin 
+                ON admin.department_id = d.department_id 
+                AND admin.role_id = 2  -- admin name
+            LEFT JOIN users AS u ON d.department_id = u.department_id  -- users under department
+            GROUP BY d.department_id;";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+
+    if ($stmt->rowCount() == 0) {
+        return [];
+    }
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 ?>
