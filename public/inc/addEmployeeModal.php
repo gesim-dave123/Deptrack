@@ -2,7 +2,6 @@
  $role = $_SESSION['role'];
 if($role!= 'Super Admin'){?>
  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
-
     <!-- Modal -->
     <div class="modal" id="employeeModal">
         <!-- Modal Header -->
