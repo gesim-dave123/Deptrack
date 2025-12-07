@@ -86,9 +86,6 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         
         markNotificationAsRead(data.notification_id);
         
-
-       
-
         if (currentTab === 'tasks') {
             modalBody.innerHTML = `
                 <div class="modal-field">

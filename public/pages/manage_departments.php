@@ -1,10 +1,13 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])){
-     include '../../config/db_connection.php';
+    include '../../config/db_connection.php';
     include '../../app/controllers/users.php';
+
+    $departments =get_all_department($conn);
     
-    $taskData = get_notifications($conn, $_SESSION['id']);
+    // Assuming get_notifications is defined and available
+    $taskData = get_notifications($conn, $_SESSION['id']); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,32 +15,28 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Departments</title>
-    <link rel="stylesheet" href="../styles/manageDepartments.css?v=2.0">
+    <link rel="stylesheet" href="../styles/manageDepartments.css?v=5.0">
     <link rel="stylesheet" href="../styles/nav.css?v=1.0">
 </head>
 <body>
     <?php include '../inc/nav.php'; ?>
-   
+    <?php include '../inc/toast.php'; ?>
+    
 
     <main class="main-content">
-            <div class="page-header">
-                <h1 class="page-title">Manage Departments</h1>
-                <button class="add-department-btn" onclick="openAddModal()">
-                    <span>+</span> Add Department
-                </button>
-            </div>
+        <div class="page-header">
+            <h1 class="page-title">Manage Departments</h1>
+            <button class="add-department-btn" onclick="openAddModal()">
+                <span>+</span> Add Department
+            </button>
+        </div>
 
-            <!-- Departments Grid -->
-            <div class="departments-grid" id="departmentsGrid">
-                <!-- Department cards will be inserted here -->
+        <div class="departments-grid" id="departmentsGrid">
             </div>
-        </main>
-    </div>
+    </main>
 
-    <!-- Modal Overlay -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
 
-    <!-- View Department Details Modal -->
     <div class="modal" id="viewDepartmentModal">
         <div class="modal-header">
             <div class="modal-title">
@@ -50,12 +49,14 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         <div class="modal-body">
             <div class="detail-item">
                 <span class="detail-label">Department Name</span>
-                <div class="detail-value" id="viewDeptNameValue"></div>
+                <div class="view-mode" id="viewDeptNameValue"></div>
+                <input type="text" class="edit-mode" id="editDeptNameInput" style="display:none;">
             </div>
 
             <div class="detail-item">
                 <span class="detail-label">Description</span>
-                <div class="detail-value" id="viewDeptDescription"></div>
+                <div class="view-mode" id="viewDeptDescription"></div>
+                <textarea class="edit-mode" id="editDeptDescriptionTextarea" style="display:none;"></textarea>
             </div>
 
             <div class="detail-item">
@@ -71,11 +72,10 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
 
         <div class="modal-footer">
             <button class="btn-cancel" onclick="closeModal()">Close</button>
-            <button class="btn-submit" onclick="editDepartment()">Edit Department</button>
+
+            <button class="btn-submit" id="editSaveBtn" onclick="openEditMode()">Edit Department</button>
         </div>
     </div>
-
-    <!-- Add Department Modal -->
     <div class="modal" id="addDepartmentModal">
         <div class="modal-header">
             <div class="modal-title">
@@ -86,8 +86,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         </div>
 
         <div class="modal-body">
-            <form id="addDepartmentForm">
-                <!-- Department Information Section -->
+            <form id="addDepartmentForm" action>
                 <div class="section-header">📋 Department Information</div>
 
                 <div class="form-group">
@@ -100,19 +99,16 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                     <textarea id="deptDescription" name="deptDescription" placeholder="Describe the department's responsibilities and purpose" required></textarea>
                 </div>
 
-                <!-- Icon Selector -->
                 <div class="form-group icon-selector">
                     <label>Select Department Icon *</label>
-                    <div class="help-text">Choose an icon that represents this department</div>
+                    <div class="help-text">Choose an emoji that represents this department</div>
                     <input type="hidden" id="selectedIcon" name="selectedIcon" required>
                     <div class="icon-grid" id="iconGrid">
-                        <!-- Icons will be inserted here -->
-                    </div>
+                        </div>
                 </div>
 
                 <div class="section-divider"></div>
 
-                <!-- Admin Account Section -->
                 <div class="section-header">👤 Create Admin Account</div>
 
                 <div class="form-row">
@@ -151,43 +147,17 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     </div>
 
     <script>
-      const departmentIcons = [
+        const departmentIcons = [
             '💻', '🏢', '📊', '💰', '📈', '🎯', '🔧', '⚙️', '🎨', '📱',
             '🌐', '📞', '🎓', '🏥', '🔬', '📦', '🚚', '🏭', '🛠️', '📢'
         ];
-
-        // Sample department data
-        const departments = [
-            {
-                id: 1,
-                name: 'Engineering',
-                description: 'Responsible for software development, system architecture, and technical infrastructure',
-                employees: 24,
-                admin: 'John Doe',
-                icon: '💻'
-            },
-            {
-                id: 2,
-                name: 'Human Resources',
-                description: 'Manages employee relations, recruitment, and organizational development',
-                employees: 8,
-                admin: 'Jane Smith',
-                icon: '👥'
-            },
-            {
-                id: 3,
-                name: 'Marketing',
-                description: 'Handles brand strategy, digital marketing, and customer engagement',
-                employees: 15,
-                admin: 'Mike Johnson',
-                icon: '📢'
-            }
-        ];
+    
+        const departments = <?php echo json_encode($departments); ?>;
 
         let selectedDepartment = null;
         let selectedIcon = null;
 
-        // Render department cards
+        // Render department cards - UPDATED STRUCTURE
         function renderDepartments() {
             const grid = document.getElementById('departmentsGrid');
             
@@ -202,24 +172,28 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             }
 
             grid.innerHTML = departments.map(dept => `
-                <div class="department-card" onclick="viewDepartment(${dept.id})">
-                    <div class="department-icon">${dept.icon}</div>
-                    <div class="department-name">${dept.name}</div>
+                <div class="department-card" onclick="viewDepartment(${dept.department_id})">
+                    <div class="card-header">
+                        <div class="department-icon-placeholder">${dept.department_icon}</div>
+                        <div class="department-name">${dept.department_name}</div>
+                    </div>
+                    <div class="department-description">${dept.department_description.substring(0, 70) + (dept.department_description.length > 70 ? '...' : '')}</div>
                     <div class="department-stats">
                         <div class="stat-item">
                             <span class="stat-label">Employees</span>
-                            <span class="stat-value">${dept.employees}</span>
+                            <span class="stat-value">${dept.user_count}</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Admin</span>
-                            <span class="stat-value">${dept.admin.split(' ')[0]}</span>
+                            <span class="stat-value">${dept.admin_name.split(' ')[0]}</span>
                         </div>
+                        <div class="card-action-btn">View Details &rarr;</div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Render icon selector
+   
         function renderIconSelector() {
             const iconGrid = document.getElementById('iconGrid');
             iconGrid.innerHTML = departmentIcons.map(icon => `
@@ -241,16 +215,16 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             });
         }
 
-        // View department details
+      
         function viewDepartment(id) {
-            selectedDepartment = departments.find(d => d.id === id);
+            selectedDepartment = departments.find(d => d.department_id === id);
             if (!selectedDepartment) return;
 
-            document.getElementById('viewDeptName').textContent = selectedDepartment.name;
-            document.getElementById('viewDeptNameValue').textContent = selectedDepartment.name;
-            document.getElementById('viewDeptDescription').textContent = selectedDepartment.description;
-            document.getElementById('viewDeptEmployees').textContent = selectedDepartment.employees;
-            document.getElementById('viewDeptAdmin').textContent = selectedDepartment.admin;
+            document.getElementById('viewDeptName').textContent = selectedDepartment.department_name;
+            document.getElementById('viewDeptNameValue').textContent = selectedDepartment.department_name;
+            document.getElementById('viewDeptDescription').textContent = selectedDepartment.department_description;
+            document.getElementById('viewDeptEmployees').textContent = selectedDepartment.user_count;
+            document.getElementById('viewDeptAdmin').textContent = selectedDepartment.admin_name;
 
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('viewDepartmentModal').classList.add('active');
@@ -268,81 +242,233 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             document.body.style.overflow = 'hidden';
         }
 
-        // Add new department
-        function addDepartment() {
-            // Get department info
-            const deptName = document.getElementById('deptName').value.trim();
-            const deptDescription = document.getElementById('deptDescription').value.trim();
-            const icon = document.getElementById('selectedIcon').value;
-            
-            // Get admin info
-            const firstName = document.getElementById('adminFirstName').value.trim();
-            const lastName = document.getElementById('adminLastName').value.trim();
-            const username = document.getElementById('adminUsername').value.trim();
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value;
 
-            // Validation
-            if (!deptName || !deptDescription || !icon) {
-                alert('Please fill in all department information and select an icon');
-                return;
-            }
+    function addDepartment() {
+        // 1. Get Department Information
+        const deptName = document.getElementById('deptName').value.trim();
+        const deptDescription = document.getElementById('deptDescription').value.trim();
+        const icon = document.getElementById('selectedIcon').value;
+        
+        // 2. Get Admin Information
+        const firstName = document.getElementById('adminFirstName').value.trim();
+        const lastName = document.getElementById('adminLastName').value.trim();
+        const username = document.getElementById('adminUsername').value.trim();
+        const email = document.getElementById('adminEmail').value.trim();
+        const password = document.getElementById('adminPassword').value;
+        const fullName= firstName + " "+ lastName; // CRITICAL: This variable must be defined here.
 
-            if (!firstName || !lastName || !username || !email || !password) {
-                alert('Please fill in all admin account information');
-                return;
-            }
+        // 3. Validation (Keep your existing validation logic here)
+        if (!deptName || !deptDescription || !icon) {
+            alert('Please fill in all department information and select an icon');
+            return;
+        }
+        
+        if (!firstName || !lastName || !username || !email || !password) {
+            alert('Please fill in all admin account information');
+            return;
+        }
 
-            if (password.length < 8) {
-                alert('Password must be at least 8 characters');
-                return;
-            }
+        if (password.length < 8) {
+            alert('Password must be at least 8 characters');
+            return;
+        }
 
-            // Create new department with admin
-            const newDept = {
-                id: departments.length + 1,
+        // 4. Prepare the Data Payload (matching the JSON format)
+        const departmentData = {
+            action: 'createDepartment', 
+            department: {
                 name: deptName,
                 description: deptDescription,
-                employees: 0,
-                admin: `${firstName} ${lastName}`,
                 icon: icon
-            };
+            },
+            admin: {
+                fullName: fullName,
+                username: username,
+                email: email,
+                password: password,
+                role: 2 
+            }
+        };
 
-            // In a real application, you would send this to your backend:
-            const departmentData = {
-                department: {
-                    name: deptName,
-                    description: deptDescription,
-                    icon: icon
-                },
-                admin: {
-                    firstName: firstName,
-                    lastName: lastName,
-                    username: username,
-                    email: email,
-                    password: password,
-                    role: 'Admin'
-                }
-            };
+        // 5. Send Data to PHP Backend using Fetch
+        fetch('../../app/addDepartment.php', { // NOTE: Corrected path from your previous attempt
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(departmentData)
+        })
+        .then(response => {
+            // Handle non-JSON responses (for debugging)
+            if (!response.ok) {
+                console.error('HTTP Error:', response.statusText);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(result => {
+            console.log('Server Response:', result);
+            if (result.success) {
+                
+                const newDeptId = result.department_id; 
+                
+                // 🐛 FIX APPLIED HERE: Use the database-style keys for the local object
+                const newDept = {
+                    department_id: newDeptId, 
+                    department_name: deptName,
+                    department_description: deptDescription,
+                    user_count: 1, // Initial employee count is 0
+                    admin_name: fullName,
+                    department_icon: icon
+                };
+                
+                departments.push(newDept); 
+                renderDepartments();       
+                closeModal();             
+                alert(`Department "${deptName}" created successfully!`);
 
-            console.log('Creating department and admin:', departmentData);
-
-            departments.push(newDept);
-            renderDepartments();
-            closeModal();
-            alert(`Department "${deptName}" created successfully!\nAdmin account created for ${firstName} ${lastName}`);
-        }
-
+            } else {
+                
+                console.error('Failed to create department:', result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Network Error during department creation:', error);
+            alert('An unexpected error occurred. Check the console for details.');
+        });
+    }
+    
         // Edit department (placeholder)
-        function editDepartment() {
-            alert('Edit functionality would open an edit form here');
+    function toggleEditMode(isEditMode) {
+    const viewElements = document.querySelectorAll('.view-mode');
+    const editElements = document.querySelectorAll('.edit-mode');
+    const editSaveBtn = document.getElementById('editSaveBtn');
+
+    if (isEditMode) {
+        // Show Edit elements, Hide View elements
+        viewElements.forEach(el => el.style.display = 'none');
+        editElements.forEach(el => el.style.display = 'block');
+        
+        // Change button to Save
+        editSaveBtn.textContent = 'Save Changes';
+        // 🐛 FIX: Assign the function reference (WITHOUT PARENTHESES)
+        editSaveBtn.onclick = saveDepartmentChanges; 
+        editSaveBtn.classList.add('btn-save'); 
+        editSaveBtn.classList.remove('btn-submit');
+    } else {
+        // Show View elements, Hide Edit elements
+        viewElements.forEach(el => el.style.display = 'block');
+        editElements.forEach(el => el.style.display = 'none');
+        
+        // Change button back to Edit
+        editSaveBtn.textContent = 'Edit Department';
+        editSaveBtn.onclick = openEditMode;
+        editSaveBtn.classList.remove('btn-save');
+        editSaveBtn.classList.add('btn-submit');
+ 
+    }
+}
+
+    // --- Button Handlers ---
+    function openEditMode() {
+        // 1. Copy current view values into the edit inputs
+        document.getElementById('editDeptNameInput').value = document.getElementById('viewDeptNameValue').textContent;
+        document.getElementById('editDeptDescriptionTextarea').value = document.getElementById('viewDeptDescription').textContent;
+        
+        // 2. Switch the UI to edit mode
+        toggleEditMode(true);
+    }
+
+    function saveDepartmentChanges() {
+        // 1. Get new values from the input fields
+        const newName = document.getElementById('editDeptNameInput').value;
+        const newDescription = document.getElementById('editDeptDescriptionTextarea').value;
+        
+        // 2. **Implement your API/Database update logic here**
+        // e.g., send an AJAX request with the newName and newDescription
+        console.log("Saving changes...", { newName, newDescription });
+        
+        // 3. Update the local data (Assuming save was successful)
+        currentDepartment.name = newName;
+        currentDepartment.description = newDescription;
+        
+        // 4. Switch the UI back to view mode
+        toggleEditMode(false);
+    }
+    function saveDepartmentChanges() {
+        if (!selectedDepartment) return; // Safety check
+
+        // 1. Get new values from the input fields
+        const newName = document.getElementById('editDeptNameInput').value.trim();
+        const newDescription = document.getElementById('editDeptDescriptionTextarea').value.trim();
+        
+        // Basic Validation
+        if (!newName || !newDescription) {
+            alert('Department Name and Description cannot be empty.');
+            return;
         }
+
+        // 2. Prepare data payload for the server
+        const updateData = {
+            department_id: selectedDepartment.department_id,
+            department_name: newName,
+            department_description: newDescription
+        };
+        
+        // 3. Send AJAX request to update the department
+        fetch('../../app/updateDepartment.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                // Check if the response is JSON before trying to parse it
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(result => {
+            console.log('Update Server Response:', result);
+            if (result.success) {
+                
+                // 4. Update the local array and selectedDepartment object
+                const deptIndex = departments.findIndex(d => d.department_id == selectedDepartment.department_id);
+                
+                if (deptIndex !== -1) {
+                    departments[deptIndex].department_name = newName;
+                    departments[deptIndex].department_description = newDescription;
+                }
+                
+                // Also update the currently selected department object
+                selectedDepartment.department_name = newName;
+                selectedDepartment.department_description = newDescription;
+
+                // 5. Update UI
+                renderDepartments(); // Re-render department cards
+                toggleEditMode(false); // Switch back to view mode, which automatically refreshes the modal fields
+                alert(`Department "${newName}" updated successfully!`);
+
+            } else {
+                console.error('Update Failed:', result.error);
+                alert(`Failed to update department: ${result.error || 'Unknown error'}`);
+            }
+        })
+        .catch(error => {
+            console.error('Network or Parse Error during department update:', error);
+            alert(`An unexpected error occurred: ${error.message}`);
+        });
+    }
 
         // Close modal
         function closeModal() {
+            toggleEditMode(false);
             document.getElementById('modalOverlay').classList.remove('active');
             document.getElementById('viewDepartmentModal').classList.remove('active');
             document.getElementById('addDepartmentModal').classList.remove('active');
+            // document.getElementById('viewDepartmentModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             selectedDepartment = null;
             selectedIcon = null;

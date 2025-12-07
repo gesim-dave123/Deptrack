@@ -14,7 +14,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
         $id = $_POST['delete_id'];
         
         // FIXED: Removed * from DELETE statement
-        $sql = "DELETE FROM users WHERE id = ?";
+        $sql = "UPDATE users  SET is_active = 0 WHERE id = ?";
         $stmt = $conn->prepare($sql);
 
         // FIXED: Changed parameters to match the query (only $id)

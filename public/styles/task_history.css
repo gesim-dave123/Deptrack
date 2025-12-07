@@ -1,213 +1,210 @@
 * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        body {
-            font-family:Poppins;
-            display: flex;
-            height: 100vh;
-            background-color: #e8eef2;
-        }
+body {
+  font-family: Poppins;
+  display: flex;
+  height: 100vh;
+  background-color: #e8eef2;
+}
 
-       
-        .main-content {
-            flex: 1;
-            padding: 40px 50px;
-            overflow-y: auto;
-            transition: margin-left 0.3s ease;
-        }
-         .page-title {
-            font-size: 36px;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 30px;
-        }
-         .header{
-            display: flex;
-            justify-content: end;
-            padding-bottom: 10px;
-         }
+.main-content {
+  flex: 1;
+  padding: 40px 50px;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+.page-title {
+  font-size: 36px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 30px;
+}
+.header {
+  display: flex;
+  justify-content: end;
+  padding-bottom: 10px;
+}
 
-        .create-btn {
-            background-color: #0d7377;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.create-btn {
+  background-color: #0d7377;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-        .create-btn:hover {
-            background-color: #0a5c5f;
-        }
+.create-btn:hover {
+  background-color: #0a5c5f;
+}
 
-        .task-container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
+.task-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
 
-        .controls {
-            display: flex;
-            justify-content: end;
-            align-items: center;
-            margin-bottom: 30px;
-            gap: 20px;
-        }
+.controls {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
 
-        .filter-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-        .filter-icon {
-            color: #999;
-        }
+.filter-icon {
+  color: #999;
+}
 
-        .filter-select {
-            padding: 10px 40px 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            background-color: white;
-            cursor: pointer;
-            min-width: 150px;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-        }
+.filter-select {
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  min-width: 150px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+}
 
-        .search-input {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            width: 250px;
-        }
+.search-input {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 250px;
+}
 
-        .task-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-        .task-table thead {
-            background-color: #f8f8f8;
-            border-bottom: 2px solid #e0e0e0;
-        }
+.task-table thead {
+  background-color: #f8f8f8;
+  border-bottom: 2px solid #e0e0e0;
+}
 
-        .task-table th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 13px;
-            color: #333;
-        }
+.task-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+}
 
-        .task-table td {
-            padding: 20px 15px;
-            border-bottom: 1px solid #f0f0f0;
-            color: #666;
-            font-size: 13px;
-        }
+.task-table td {
+  padding: 20px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #666;
+  font-size: 13px;
+}
 
-        .task-table tbody tr:hover {
-            background-color: #fafafa;
-        }
+.task-table tbody tr:hover {
+  background-color: #fafafa;
+}
 
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-size: 12px;
-            display: inline-block;
-        }
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  display: inline-block;
+}
 
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-        }   
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
 
-        .status-progress {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
+.status-progress {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
 
-        .status-completed {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .priority-high {
-            color: #f44336;
-            font-weight: 600;
-        }
+.status-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+.priority-high {
+  color: #f44336;
+  font-weight: 600;
+}
 
-        .priority-medium {
-            color: #2196f3;
-            font-weight: 600;
-        }
+.priority-medium {
+  color: #2196f3;
+  font-weight: 600;
+}
 
-        .priority-low {
-            color: #4caf50;
-            font-weight: 600;
-        }
+.priority-low {
+  color: #4caf50;
+  font-weight: 600;
+}
 
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
 
-        .pagination-info {
-            color: #999;
-            font-size: 13px;
-        }
+.pagination-info {
+  color: #999;
+  font-size: 13px;
+}
 
-        .pagination-controls {
-            display: flex;
-            gap: 5px;
-        }
+.pagination-controls {
+  display: flex;
+  gap: 5px;
+}
 
-        .page-btn {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            background-color: white;
-            cursor: pointer;
-            font-size: 13px;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
+.page-btn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
 
-        .page-btn:hover {
-            background-color: #f5f5f5;
-        }
+.page-btn:hover {
+  background-color: #f5f5f5;
+}
 
-        .page-btn.active {
-            background-color: #0d7377;
-            color: white;
-            border-color: #0d7377;
-        }
+.page-btn.active {
+  background-color: #0d7377;
+  color: white;
+  border-color: #0d7377;
+}
 
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 14px;
-        }
-
-    
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 14px;
+}

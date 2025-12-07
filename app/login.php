@@ -43,7 +43,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         d.department_name
     FROM users u
     LEFT JOIN departments d ON u.department_id = d.department_id
-    WHERE u.username = ?";
+    WHERE u.username = ? AND is_active = 1";
     
     $stmt = $conn->prepare($sql);
     $stmt->execute([$username]);
