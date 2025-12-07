@@ -1,6 +1,6 @@
 <?php
 function get_all_employees($conn, $department_id) {
-    $sql = "SELECT id, username, full_name, email FROM users WHERE role_id = 3 AND department_id = ?";
+    $sql = "SELECT id, username, full_name, email FROM users WHERE role_id = 3 AND department_id = ? AND is_active = 1";
     $stmt = $conn->prepare($sql);
     $stmt->execute([$department_id]);
 
@@ -88,7 +88,8 @@ function get_all_accounts($conn) {
         d.department_name
     FROM users u
     LEFT JOIN roles r ON u.role_id = r.role_id
-    LEFT JOIN departments d ON u.department_id = d.department_id";
+    LEFT JOIN departments d ON u.department_id = d.department_id
+    WHERE u.is_active = 1";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     if ($stmt->rowCount() == 0) {
@@ -160,6 +161,35 @@ function get_all_department($conn) {
     }
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function update_department($conn, $dept_id, $name, $description) {
+    // Sanitize input
+    $safe_name = htmlspecialchars(trim($name));
+    $safe_description = htmlspecialchars(trim($description));
+    $safe_id = filter_var($dept_id, FILTER_SANITIZE_NUMBER_INT);
+
+    $sql = "UPDATE departments SET 
+                department_name = ?, 
+                department_description = ? 
+            WHERE department_id = ?";
+
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt === false) {
+        return "Failed to prepare statement: " . $conn->error;
+    }
+    
+
+    $execute_result = $stmt->execute([$safe_name,$safe_description,$safe_id]);
+
+    if ($execute_result) {
+            return true; // Success
+       
+    } else {
+      return false;
+    }
 }
 
 
