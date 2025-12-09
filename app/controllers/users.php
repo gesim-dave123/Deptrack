@@ -33,7 +33,7 @@ function get_all_tasks($conn, $department_id) {
 function get_all_my_tasks($conn, $department_id, $user_id) {
     $sql = "SELECT task_id, title,status, description,due_date,priority, assigned_by 
             FROM tasks 
-            WHERE department_id = ? AND assigned_to = ? AND (status = 'Pending' OR status = 'In Progress')";        
+            WHERE department_id = ? AND assigned_to = ? AND status != 'Completed'";        
     $stmt = $conn->prepare($sql);
     $stmt->execute([$department_id, $user_id]);
     if ($stmt->rowCount() == 0) {
@@ -192,5 +192,134 @@ function update_department($conn, $dept_id, $name, $description) {
     }
 }
 
+function get_all_notifications($conn){
+    $sql = "SELECT * FROM notification ORDER BY created_At DESC";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    if ($stmt->rowCount() == 0) {
+        return [];
+    }
+    return $stmt->fetchAll();
+}
 
+function get_all_tasks_per_department($conn, $department_id) {
+    // Use a positional placeholder (?) for the department_id
+    $sql = "
+        SELECT 
+            status, 
+            COUNT(task_id) AS total
+        FROM tasks
+        WHERE department_id = ?
+        GROUP BY status
+    ";
+
+    $stmt = $conn->prepare($sql);
+    
+    // CORRECTED LINE 1: Pass the parameter array to the execute() method for positional binding.
+    // The execute method returns TRUE on success or FALSE on failure.
+    $stmt->execute([$department_id]);
+    
+    $tasks_by_status = [];
+
+    // CORRECTED LINE 2: Use PDO's fetch method to retrieve results.
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $tasks_by_status[$row['status']] = $row['total'];
+    }
+
+    // PDO statements are generally closed automatically when the script finishes or 
+    // when the variable is reassigned, but you can explicitly unset or close a cursor if needed.
+    // $stmt = null; 
+    
+    return $tasks_by_status;
+}
+function get_employee_status_counts($conn, $department_id) {
+    // SQL query to count employees by their 'is_active' status (0 or 1)
+    $sql = "
+        SELECT 
+            is_active, 
+            COUNT(id) AS total
+        FROM users
+        WHERE department_id = :dept_id AND role_id = 3
+        GROUP BY is_active
+    ";
+
+    // 1. Prepare the statement
+    $stmt = $conn->prepare($sql);
+    
+    // 2. Execute the statement, passing an associative array for parameter binding
+    $stmt->execute([':dept_id' => $department_id]);
+    
+    // 3. Initialize counts
+    $status_counts = [
+        'Active' => 0,
+        'Inactive' => 0
+    ];
+
+    // 4. Fetch the results
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if ($row['is_active'] == 1) {
+            $status_counts['Active'] = $row['total'];
+        } else {
+            $status_counts['Inactive'] = $row['total'];
+        }
+    }
+    
+    return $status_counts;
+}
+
+function get_total_tasks_per_user_by_department($conn, $department_id) {
+    
+    $sql = "
+        SELECT 
+            u.id, 
+            u.username,  
+            COUNT(t.task_id) AS total_tasks
+        FROM 
+            users u
+        LEFT JOIN 
+            tasks t ON u.id = t.assigned_to
+        WHERE 
+            u.department_id = ?  && u.role_id != 2
+        GROUP BY 
+            u.id, u.username
+        ORDER BY 
+            total_tasks DESC;
+    ";
+    
+    // Use a prepared statement to safely include the department ID
+    $stmt = $conn->prepare($sql);
+    
+    // Execute the statement, passing the department ID as a parameter
+    $stmt->execute([$department_id]);
+    
+    // Fetch all results into an associative array
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    return $results;
+}
+
+function get_tasks_by_status_count($conn) {
+    $sql = "
+        SELECT  
+            status,
+            COUNT(task_id) AS task_count 
+        FROM 
+            tasks
+        GROUP BY
+            status
+    ";
+    
+    // Prepare and execute the statement
+    // Using prepare() is still good practice even without parameters
+    $stmt = $conn->prepare($sql);
+    
+    // Execute the statement
+    $stmt->execute();
+    
+    // Fetch *all* results into an associative array, since there are multiple rows
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Return the array containing all status counts
+    return $results;
+}
 ?>

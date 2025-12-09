@@ -9,11 +9,16 @@ if (!isset($_SESSION['id'])) {
 // Redirect delay remains 2 seconds
 $redirect_delay_ms = 2000; 
 $redirect_delay_s = $redirect_delay_ms / 1000;
+
+if ($_SESSION['role_id'] == 1) {
+    $dashboard_page = "../pages/superAdminDashboard.php"; 
+} else if ($_SESSION['role_id'] == 2) {
+    $dashboard_page = "../pages/adminDashboard.php"; 
+}else{
 $dashboard_page = "../pages/dashboard.php"; 
+}
 
-// Client-side redirect after the delay
 header("refresh: {$redirect_delay_s}; url={$dashboard_page}");
-
 // Include toast system (contains showToast function/CSS)
 include 'toast.php';
 ?>

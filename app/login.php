@@ -16,6 +16,7 @@ unset($_SESSION['csrf_token']);
 
 if (isset($_POST['username']) && isset($_POST['password'])) {
     include "../../config/db_connection.php";
+    include "updateMissedTasks.php";
 
     function validate_input($data) {
         $data = trim($data);
@@ -39,6 +40,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         u.hashed_password,
         u.full_name,
         u.role_id,
+        u.created_by,
         u.department_id,
         d.department_name
     FROM users u
@@ -64,13 +66,16 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 
     
     $_SESSION['username'] = $user['username'];
+    $_SESSION['role_id'] = $user['role_id'];
     $_SESSION['fullname'] = $user['full_name'];
+    $_SESSION['created_by'] = $user['created_by'];
     $_SESSION['id'] = $user['id'];
     $_SESSION['toast'] = [
         'type' => 'success',
         'title' => 'Success!',
         'message' => 'Logged in Successfully!'
     ];
+    checkAndHandleMissedDeadlines($conn);
 
     // Set role-specific session variables
     switch ($user['role_id']) {

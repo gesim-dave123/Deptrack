@@ -37,8 +37,23 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
         $sql = "UPDATE tasks SET status = ? WHERE task_id = ?";
         $stmt = $conn->prepare($sql);
 
+
+       
+
         if ($stmt->execute([$newStatus, $taskId])) {
-            echo "Task status updated successfully!"; 
+            echo "Task status updated successfully!";
+
+             $message = "Task status changed to " . $newStatus;
+             $type= "Task Updated";
+             $status="Success";
+             $created_by_name = $_SESSION['fullname'];
+             $recepient_id = $_SESSION['created_by'];
+             $sql_notification = "INSERT INTO notification (message, recepient_id, task_id,type,created_by,status) VALUES (?, ?,?, ?, ?, ?)";
+             $stmt_notification = $conn->prepare($sql_notification);
+             $stmt_notification->execute([$message, $recepient_id,$taskId, $type, $created_by_name, $status]);
+
+           
+               
         } else {
            $em = " Failed to update task";
            header("Location: ../../public/pages/my_task.php?error=$em");
