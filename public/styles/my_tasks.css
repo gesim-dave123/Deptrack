@@ -94,6 +94,17 @@ body {
   color: #0c5460;
 }
 
+.status-badge-missing {
+  display: inline-block;
+  padding: 6px 15px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  background-color: #f1d1d5;
+  color: #db1b1b;
+}
+
 .task-title {
   font-size: 18px;
   font-weight: 700;
@@ -192,13 +203,13 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  background: #ffffff; /* Pure white background */
+  border-radius: 16px; /* Slightly softer corners */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1); /* Deeper, modern shadow */
   z-index: 1000;
   width: 90%;
-  max-width: 500px;
-  animation: slideDown 0.3s ease;
+  max-width: 550px; /* Slightly wider modal */
+  animation: slideDown 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .modal.active {
