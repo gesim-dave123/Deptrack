@@ -97,19 +97,23 @@ body {
   margin-top: 8px;
 }
 
-.status-success {
+.status-Success {
   background: #d4f8e8;
   color: #0d8b5f;
 }
 
-.status-warning {
+.status-Warning {
   background: #fff3cd;
   color: #856404;
 }
 
-.status-info {
+.status-Info {
   background: #cfe2ff;
   color: #084298;
+}
+.status-Failed {
+  background: #f8d7da;
+  color: #842029;
 }
 
 .empty-state {
