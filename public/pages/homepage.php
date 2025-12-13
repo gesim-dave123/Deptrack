@@ -10,15 +10,15 @@
     <header>
         <div class="logo">
             <div class="logo-icon">
-                <img src ="public\images\logo.png">
+                <img src ="public/images/logo.png">
             </div>
             <span>DepTrack</span>
         </div>
         <nav>
             <a href="">Home</a>
-            <a href="#about">About Us</a>
-            <a href="#faq">FAQ</a>
-            <a href="#help">Help</a>
+            <a href="public/pages/about.php">About Us</a>
+            <a href="public/pages/feature.php">Feature</a>
+            <a href="public/pages/contact.php">Contacts</a>
         </nav>
     </header>  
     <section class="hero">  
@@ -34,7 +34,7 @@
         </div>
 
         <div class="image">
-            <img src="public\images\HomepageImage.png" id="homeImg">
+            <img src="public/images/HomepageImage.png" id="homeImg">
         </div>
     </section>
 </body>
