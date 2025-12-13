@@ -155,8 +155,8 @@
                 <p class="team-role">Full Stack Developer</p>
                 <p class="team-description">Full-stack developer passionate about creating intuitive and powerful solutions.</p>
                 <div class="social-links">
-                    <a href="#" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
-                    <a href="#" class="social-link"><img src="public/images/github-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
+                    <a href="#https://www.facebook.com/david.libongkogon/" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
+                    <a href="#https://github.com/gesim-dave123" class="social-link"><img src="public/images/github-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                     <a href="#" class="social-link"><img src="public/images/gmail-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                 </div>
             </div>
@@ -168,8 +168,8 @@
                 <p class="team-role">Frontend Developer</p>
                 <p class="team-description">Frontend developer passionate about creating intuitive and responsive user interfaces.</p>
                 <div class="social-links">
-                    <a href="#" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
-                    <a href="#" class="social-link"><img src="public/images/github-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
+                    <a href="#https://www.facebook.com/krayssst" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
+                    <a href="#https://github.com/Hanzeeeee" class="social-link"><img src="public/images/github-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                     <a href="#" class="social-link"><img src="public/images/gmail-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                 </div>
             </div>
@@ -181,7 +181,7 @@
                 <p class="team-role">UX/UI Designer</p>
                 <p class="team-description">Creative designer focused on delivering exceptional user experiences and intuitive interfaces.</p>
                 <div class="social-links">
-                    <a href="#" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
+                    <a href="#https://www.facebook.com/andreweeyyy" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                     <a href="#" class="social-link"><img src="public/images/github-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                     <a href="#" class="social-link"><img src="public/images/gmail-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                 </div>
@@ -194,7 +194,7 @@
                 <p class="team-role">Quality Assurance</p>
                 <p class="team-description">QA specialist ensuring software quality through rigorous testing and process improvement</p>
                 <div class="social-links">
-                    <a href="#" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
+                    <a href="#https://www.facebook.com/liljasse" class="social-link"><img src="public/images/facebook-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                     <a href="#" class="social-link"><img src="public/images/github-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                     <a href="#" class="social-link"><img src="public/images/gmail-svgrepo-com.svg" alt="Task Icon" width="27" height="27" ></a>
                 </div>
