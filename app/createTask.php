@@ -23,29 +23,20 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             exit();
             
         }else{   
-            $sql_taskTitle = "SELECT task_id FROM tasks WHERE title = ?";
-            $stmt_taskTitle = $conn->prepare($sql_taskTitle);
-            $stmt_taskTitle->execute([$title]); 
-            $result_taskTitle = $stmt_taskTitle->fetchAll();
-
-            if(count($result_taskTitle ) ){
-                $em = "Task already exists";
-                header("Location: ../../public/pages/manage_tasks.php?error=$em");
-                exit();
-            }else{
-                $assigned_by = $_SESSION['id'];
+                $type= "Task Created";
+                $status="Success";
+                $created_by_name = $_SESSION['fullname'];
+                $assigned_by = $_SESSION['id']; 
                 $department_id = $_SESSION['department_id'];
                 $sql = "INSERT INTO tasks (title, description, due_date, priority, assigned_to, assigned_by, department_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->execute([$title, $description, $deadline, $priority, $assignTo, $assigned_by, $department_id]);
-                //for notification
 
                 $task_id = $conn->lastInsertId();
 
-                $sql_notification = "INSERT INTO notification (message, recepient_id, type,date,task_id) VALUES (?, ?, ?, ?, ?)";
+                $sql_notification = "INSERT INTO notification (message, recepient_id, type,date,task_id,created_by,status) VALUES (?, ?, ?, ?, ?,?,?)";
                 $stmt = $conn->prepare($sql_notification);
-                $stmt->execute([$description,$assignTo,$priority,$deadline,$task_id]);
-
+                $stmt->execute([$description,$assignTo,$type,$deadline,$task_id,$created_by_name,$status]);
                 $em = "Task created successfully";
                 header("Location: ../../public/pages/manage_tasks.php?success=$em");
                 exit();
@@ -56,9 +47,4 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
          header("Location: ../../public/pages/login.php?error=$em");;
          exit();
     }
-}else{
-    $em = "Login First";
-    header("Location: ../../public/pages/login.php?error=$em");;
-    exit();
-}
 ?>

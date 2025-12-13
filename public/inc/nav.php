@@ -1,4 +1,6 @@
 
+
+
 <button class="mobile-toggle" onclick="toggleMobileSidebar()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 6h16M4 12h16M4 18h16"></path>
@@ -64,12 +66,16 @@
                 </a>
             </div>
             <div class="nav-item">
+                <span class="nav-badge" id="notificationBadge">0</span>
                 <a href="notification.php">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                 </svg>
+                
+                
                 <span>Notifications</span>
-                </a>
+                
+                 </a>
                 
             </div>
                  <!-- Admin Navigation Bar -->
@@ -77,7 +83,7 @@
 
             <nav class="nav-menu">
             <div class="nav-item ">
-                <a href="dashboard.php">
+                <a href="adminDashboard.php">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
@@ -105,6 +111,7 @@
                 
             </div>
             <div class="nav-item">
+                <span class="nav-badge" id="notificationBadge">0</span>
                 <a href="notification.php">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
@@ -118,7 +125,7 @@
 
             <nav class="nav-menu">
             <div class="nav-item <?php echo ($current_page == 'dashboard.php') ? 'active' : ''; ?>">
-                <a href="dashboard.php">
+                <a href="superAdminDashboard.php">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
@@ -126,14 +133,6 @@
                     <rect x="3" y="14" width="7" height="7"></rect>
                 </svg>
                 <span>Dashboard</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="leaderboards.php" >
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-                <span>Leaderboards</span>
                 </a>
             </div>
             <div class="nav-item">
@@ -145,7 +144,7 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="manage_accounts.php" class=>
+                <a href="manage_employees.php" class=>
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -156,11 +155,12 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="notification.php">
+                <span class="nav-badge" id="notificationBadge">0</span>
+                <a href="activityLogs.php">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                 </svg>
-                <span>Notifications</span>
+                <span>Activity Logs</span>
                 </a>
                 
             </div>
@@ -179,6 +179,7 @@
     </div>
 
     <script>
+        const tasksData = <?php echo json_encode($taskData); ?>;
         const activePage = window.location.pathname.split("/").pop();
         const navItems = document.querySelectorAll(".nav-item a");
         navItems.forEach(item => {
@@ -191,6 +192,15 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('collapsed');
         }
+        function updateBadges() {  
+            const unreadNotifications = tasksData.filter(task => task.is_read == 0).length;
+            const notificationBadge = document.getElementById('notificationBadge');
+            notificationBadge.textContent = unreadNotifications;
+            notificationBadge.classList.toggle('hide', unreadNotifications === 0);
+        }
+
+        // Call on page load
+        updateBadges();
 
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -209,3 +219,5 @@
         });
         
     </script>
+
+<!-- <?php  ?> -->

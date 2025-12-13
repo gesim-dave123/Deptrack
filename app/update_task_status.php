@@ -8,46 +8,52 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Check if the user is authenticated
 if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
-    
-    // Check if required POST data (task ID and new status) is present
+ 
     if (isset($_POST['task_id']) && isset($_POST['status'])) {
         
-        // Configuration and setup
-        // Assuming the database connection file handles connection initialization
+
         include '../../config/db_connection.php';
         
         $taskId = $_POST['task_id'];
         $newStatus = $_POST['status'];
 
-        // --- 1. Basic Input Validation ---
-        
-        // Check for empty values after POST submission
+       
         if (empty($taskId) || empty($newStatus)) {
             $em = "Field Required";
-            // NOTE: The original output redirects with an 'error' query parameter
+     
             header("Location: ../my_task.php?error=$em"); 
             exit();
         }
         
-        // Define accepted statuses for strong validation
         $validStatuses = ['In Progress', 'Completed', 'Pending'];
-        
-        // Validate status value against the allowed list
+  
         if (!in_array($newStatus, $validStatuses)) {
-            $em = "Invalid status value"; // Set session error message
+            $em = "Invalid status value";
              header("Location: ../../public/pages/my_task.php?error=$_em"); 
             exit();
         }
         
-        // --- 2. Database Update ---
-
-        // Prepare the SQL statement to prevent SQL injection (using parameterized query)
+     
         $sql = "UPDATE tasks SET status = ? WHERE task_id = ?";
         $stmt = $conn->prepare($sql);
 
-        // Execute the update
+
+       
+
         if ($stmt->execute([$newStatus, $taskId])) {
-            echo "Task status updated successfully!"; // Original output: This echo will be lost on redirect.
+            echo "Task status updated successfully!";
+
+             $message = "Task status changed to " . $newStatus;
+             $type= "Task Updated";
+             $status="Success";
+             $created_by_name = $_SESSION['fullname'];
+             $recepient_id = $_SESSION['created_by'];
+             $sql_notification = "INSERT INTO notification (message, recepient_id, task_id,type,created_by,status) VALUES (?, ?,?, ?, ?, ?)";
+             $stmt_notification = $conn->prepare($sql_notification);
+             $stmt_notification->execute([$message, $recepient_id,$taskId, $type, $created_by_name, $status]);
+
+           
+               
         } else {
            $em = " Failed to update task";
            header("Location: ../../public/pages/my_task.php?error=$em");

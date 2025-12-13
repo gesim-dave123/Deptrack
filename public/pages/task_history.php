@@ -8,6 +8,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     $user_id = $_SESSION['id'];
     $completed_tasks = get_completed_tasks($conn, $department_id, $user_id);
     //  print_r($completed_tasks);
+    $taskData = get_notifications($conn, $user_id);
 ?>
 <!DOCTYPE html>
 <html lang="en">
