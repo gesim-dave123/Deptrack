@@ -243,19 +243,15 @@ function get_employee_status_counts($conn, $department_id) {
         GROUP BY is_active
     ";
 
-    // 1. Prepare the statement
     $stmt = $conn->prepare($sql);
     
-    // 2. Execute the statement, passing an associative array for parameter binding
     $stmt->execute([':dept_id' => $department_id]);
-    
-    // 3. Initialize counts
+
     $status_counts = [
         'Active' => 0,
         'Inactive' => 0
     ];
 
-    // 4. Fetch the results
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if ($row['is_active'] == 1) {
             $status_counts['Active'] = $row['total'];
@@ -308,18 +304,144 @@ function get_tasks_by_status_count($conn) {
         GROUP BY
             status
     ";
-    
-    // Prepare and execute the statement
-    // Using prepare() is still good practice even without parameters
     $stmt = $conn->prepare($sql);
     
     // Execute the statement
     $stmt->execute();
     
-    // Fetch *all* results into an associative array, since there are multiple rows
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Return the array containing all status counts
     return $results;
+}
+
+function get_total_departments($conn){
+    $sql = "SELECT COUNT(department_id) AS total_departments FROM departments";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    if ($stmt->rowCount() == 0) {
+        return 0;
+    }
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total_departments'];
+}
+
+function get_total_employees($conn){
+    $sql = "SELECT COUNT(id) AS total_employees FROM users WHERE role_id != 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    if ($stmt->rowCount() == 0) {
+        return 0;
+    }
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total_employees'];
+}
+
+
+function get_total_tasks_by_department($conn){
+    $sql = "SELECT
+                d.department_name,
+                COUNT(t.task_id) AS total_tasks
+            FROM
+                departments d
+            LEFT JOIN
+                tasks t ON t.department_id = d.department_id
+            GROUP BY
+                d.department_id, d.department_name
+            ORDER BY
+                d.department_name;
+    ";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    return $results;
+}
+
+function get_task_status_counts($conn){
+    // 1. Corrected SQL: Selects status and the count
+    $sql = "SELECT 
+                status, 
+                COUNT(task_id) AS count 
+            FROM 
+                tasks 
+            GROUP BY 
+                status";
+    
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        
+        // 2. Fetch ALL results as an indexed array of rows
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // 3. Format the results into a key/value array for easy JS consumption
+        $statusCounts = [];
+        foreach ($results as $row) {
+            $statusCounts[$row['status']] = (int)$row['count'];
+        }
+        
+        return $statusCounts;
+        
+    } catch (PDOException $e) {
+        // Handle database error gracefully
+        error_log("Database Error in get_task_status_counts: " . $e->getMessage());
+        return [];
+    }
+}
+
+
+function get_AllEmployee_status_counts($conn) {
+    
+    // Define the map to convert the database status code (1 or 0) to the desired string key
+    $status_map = [
+        1 => 'Active',
+        0 => 'Inactive'
+    ];
+    
+    $sql = "
+        SELECT 
+            is_active, 
+            COUNT(id) AS total_employees 
+        FROM users 
+        WHERE 
+            role_id != 1 
+        GROUP BY is_active
+    ";
+    
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $status_counts = [];
+        foreach ($results as $row) {
+            $is_active_code = (int)$row['is_active'];
+            $total_count = (int)$row['total_employees'];
+            
+            // Check if the code exists in our map before assigning
+            if (isset($status_map[$is_active_code])) {
+                $string_key = $status_map[$is_active_code];
+                $status_counts[$string_key] = $total_count;
+            }
+        }
+        
+        // Optional: Merge with default values (Active=0, Inactive=0) to ensure both keys are ALWAYS present
+        $default_counts = [
+            'Active' => 0,
+            'Inactive' => 0
+        ];
+        
+        // Return the final keyed array, ensuring Active/Inactive keys exist
+        return array_merge($default_counts, $status_counts);
+        
+    } catch (PDOException $e) {
+        error_log("Database Error in get_AllEmployee_status_counts: " . $e->getMessage());
+        // Return the safe default structure on error
+        return ['Active' => 0, 'Inactive' => 0]; 
+    }
 }
 ?>
