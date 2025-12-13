@@ -207,7 +207,8 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                                         '<?php echo htmlspecialchars($Account['id'], ENT_QUOTES, 'UTF-8'); ?>',
                                         '<?php echo htmlspecialchars($Account['full_name'], ENT_QUOTES, 'UTF-8'); ?>',
                                         '<?php echo htmlspecialchars($Account['username'], ENT_QUOTES, 'UTF-8'); ?>',
-                                        '<?php echo htmlspecialchars($Account['email'], ENT_QUOTES, 'UTF-8'); ?>')">
+                                        '<?php echo htmlspecialchars($Account['email'], ENT_QUOTES, 'UTF-8'); ?>',
+                                        '<?php echo htmlspecialchars($Account['role_name'], ENT_QUOTES, 'UTF-8'); ?>')">
                                         <span class="icon-delete"></span>Delete
                                     </button>
                                 </div>
@@ -244,8 +245,6 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 rows[i].style.display = found ? '' : 'none';
             }
         }
-
-        // For Super Admin - Combined filter with search
         function filterTable() {
             const searchInput = document.getElementById('searchBox');
             const searchFilter = searchInput ? searchInput.value.toLowerCase() : '';
@@ -314,11 +313,27 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             document.getElementById('editEmployeeModal').classList.add('active');
         }
 
-        function openDeleteModal(id, fullname, username, email) {
+        function openDeleteModal(id, fullname, username, email, role_name) {
+
             document.getElementById('delete_id').value = id;
+            document.getElementById('delete_role_name').value = role_name;
             document.getElementById('employeeName').textContent = fullname;
             document.getElementById('employeeUsername').textContent = username;
             document.getElementById('employeeEmail').textContent = email;
+
+            const confirmButton = document.getElementById('confirmDeleteButton'); // Get the button by its new ID
+            
+            const isProtectedRole = role_name.toLowerCase() === 'super admin' || role_name.toLowerCase() === 'admin';
+            
+            if (isProtectedRole) {
+                confirmButton.disabled = true;
+                confirmButton.title = 'Cannot delete Admin account.';
+            } else {
+                confirmButton.disabled = false;
+                confirmButton.title = '';
+            }
+
+            // Display the modal
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('deleteEmployeeModal').classList.add('active');
             document.body.style.overflow = 'hidden';
