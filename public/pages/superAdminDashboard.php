@@ -7,31 +7,12 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     include '../../app/controllers/users.php';
     
 
-    $dashboard_data = get_chart_data($conn, $_SESSION['id']);
-    // print_r( $dashboard_data);
-        
-    $cleanData = [
-        "Completed" => 0,
-        "Pending" => 0,
-        "InProgress" => 0,
-        "Missing" => 0
-    ];
+    $allTasksCount = get_task_status_counts($conn);
+    $totalDepartments = get_total_departments($conn);
+    $totalEmployees = get_Allemployee_status_counts($conn);
+    $taskperDepartment = get_total_tasks_by_department($conn);
+    // $taskData = get_notifications($conn);
 
-    foreach ($dashboard_data as $row) {
-        if ($row['status'] === "Completed") $cleanData["Completed"] = $row["total"];
-        if ($row['status'] === "Pending") $cleanData["Pending"] = $row["total"];
-        if ($row['status'] === "In Progress") $cleanData["InProgress"] = $row["total"];
-        if ($row['status'] === "Missing") $cleanData["Missing"] = $row["total"];
-    }
-    $taskData = get_notifications($conn, $_SESSION['id']);
-    // $employeeStatusCounts = get_employee_status_counts($conn,);
-    // $allTasksCount = get_tasks_by_status_count($conn);
-    
-    // $allTasksCount = get_all_tasks_per_department($conn, $_SESSION['department_id']);
-
-    // $taskperEmployee = get_total_tasks_per_user_by_department($conn, $_SESSION['department_id']);
-    
-    // print_r($taskperEmployee);    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,21 +33,21 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 <div class="container">
                     
                    <h1 class ="page-title">Dashboard</h1>
-                    <p>Tasks, Employees and Departments Overview</p>
+                    <p>Task & Employee Overview</p>
                     
                     <div class="dashboard">
                     <!-- Top Info Cards -->
                     <div class="top-cards">
                         <div class="card info-card">
-                            <h3>Department</h3>
+                            <h3>Total Departments</h3>
                             <div class="value" id="department"></div>
                         </div>
                         <div class="card info-card">
-                            <h3>Total Tasks</h3>
+                            <h3>Overall Total Tasks</h3>
                             <div class="value" id="totalTasks"></div>
                         </div>
                         <div class="card info-card">
-                            <h3>Total Employees</h3>
+                            <h3>Total Staffs</h3>
                             <div class="value" id="totalEmployees">12</div>
                         </div>
                     </div>
@@ -76,7 +57,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                         <!-- Left Section: Bar Chart -->
                         <div class="left-section">
                             <div class="chart-card">
-                                <h2>Tasks by Employee</h2>
+                                <h2>Tasks by Department</h2>
                                 <div class="chart-container">
                                     <canvas id="barChart"></canvas>
                                 </div>
@@ -86,23 +67,23 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                         <!-- Right Section: Pie Charts -->
                         <div class="right-section">
                             <div class="chart-card-pie">
-                                <h2>Task Status</h2>
+                                <h2>Overall Task Status</h2>
                                 <div class="pie-chart-wrapper">
                                     <canvas id="taskPie"></canvas>
                                     <div class="center-text">
                                         <div class="label">Total Tasks</div>
-                                        <div class="number" id="taskTotal">45</div>
+                                        <div class="number" id="taskTotal"></div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="chart-card-pie">
-                                <h2>Employee Status</h2>
+                                <h2>Staff Status</h2>
                                 <div class="pie-chart-wrapper">
                                     <canvas id="employeePie"></canvas>
                                     <div class="center-text">
-                                        <div class="label">Total Employees</div>
-                                        <div class="number" id="empTotal">12</div>
+                                        <div class="label">Total Staffs</div>
+                                        <div class="number" id="empTotal"></div>
                                     </div>
                                 </div>
                             </div>
@@ -112,47 +93,36 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
                 </div>
             </div>
      <script>
-    const notificationsData = <?php echo json_encode($taskData); ?>;
+   
     const allTasksCount = <?php echo json_encode($allTasksCount); ?>;
-    const employeeStatusCounts = <?php echo json_encode($employeeStatusCounts); ?>;
-    const taskperEmployee = <?php echo json_encode($taskperEmployee); ?>;
-    
-    // Fallback constants for statuses that might not exist in the database result
+    const totalDepartments = <?php echo json_encode($totalDepartments); ?>;
+    const totalEmployees = <?php echo json_encode($totalEmployees); ?>; 
+    const task_per_department = <?php echo json_encode($taskperDepartment); ?>; 
+
+
     const completedTasks = allTasksCount.Completed || 0;
     const pendingTasks = allTasksCount.Pending || 0;
     const inProgressTasks = allTasksCount['In Progress'] || 0; // Note the space in the key!
     const missingTasks = allTasksCount.Missing || 0;
 
-    const activeEmployees = employeeStatusCounts.Active || 0;
-    const inactiveEmployees = employeeStatusCounts.Inactive || 0;
+    const activeEmployees = totalEmployees.Active || 0;
+    const inactiveEmployees = totalEmployees.Inactive || 0;
 
     // 2. Calculate Totals (Fixing the NaN issue by using + for number coercion)
     const totalTasks = +completedTasks + 
                        +pendingTasks + 
                        +inProgressTasks + 
                        +missingTasks;
-    
-    const totalEmployees = +activeEmployees + +inactiveEmployees;
 
+    const totalAllEmployees = +activeEmployees + 
+                           +inactiveEmployees;
 
-    // 3. Update Info Cards with Dynamic Data
-    document.getElementById('department').textContent = <?php echo json_encode($_SESSION['department']); ?>;
-
-    // Use the calculated total tasks
     document.getElementById('totalTasks').textContent = totalTasks; 
-
-    // Use the calculated total employees
-    document.getElementById('totalEmployees').textContent = totalEmployees; 
-
-
-    // 4. Update Pie Chart Total in Center Text
+    document.getElementById('department').textContent = totalDepartments;
+    document.getElementById('totalEmployees').textContent = totalAllEmployees;
     document.getElementById('taskTotal').textContent = totalTasks;
-    document.getElementById('empTotal').textContent = totalEmployees; 
+    document.getElementById('empTotal').textContent = totalAllEmployees;
 
-
-    // --- Chart.js Configuration ---
-
-    // Task Pie Chart (Updated to use allTasksCount)
     const taskCtx = document.getElementById('taskPie').getContext('2d');
     new Chart(taskCtx, {
         type: 'doughnut',
@@ -234,10 +204,8 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     });
 
     // Bar Chart (Still uses static/dummy data. You need to implement the PHP function for this.)
-    const barData = taskperEmployee.map(item => ({
-        // Map the 'username' from the database to 'name' for the chart data
-        name: item.username,
-        // Map the 'total_tasks' from the database to 'tasks' for the chart data
+    const barData = task_per_department.map(item => ({
+        name: item.department_name,
         tasks: item.total_tasks
     }));
     const barCtx = document.getElementById('barChart').getContext('2d');
