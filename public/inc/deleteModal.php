@@ -30,13 +30,15 @@
                 <p><strong>Email:</strong> <span id="employeeEmail">john.doe@example.com</span></p>
                 <form id="taskForm" action="../handlers/deleteAccount_handler.php" method="POST">
                 <input type="hidden" id="delete_id" name="delete_id" value="">
+                <input type="hidden" id="delete_role_name" name="delete_role_name" value="">
                 </form>
             </div>
         </div>
 
         <!-- Modal Footer -->
-        <div class="modal-footer">
+       <div class="modal-footer">
             <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-            <button class="delete-btn" type="submit" form="taskForm" class="save-btn">Confirm Delete</button>
+            
+            <button class="delete-btn" id="confirmDeleteButton" type="submit" form="taskForm">Confirm Delete</button>
         </div>
     </div>
