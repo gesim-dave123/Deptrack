@@ -4,7 +4,7 @@ $base = rtrim(dirname($_SERVER['PHP_SELF']), '/');
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="<?= $base ?>/public/styles/homepage.css?v=1.0">
+    <link rel="stylesheet" href="<?= $base ?>/public/styles/homepage.css?v=4.0">
 </head>
 <body>
     <main>

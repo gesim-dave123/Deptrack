@@ -36,7 +36,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
         <div class="task-container">
             <div class="controls">
                 <div class="filter-section">
-                    <span class="filter-icon">🔍</span>
+                    <span class="filter-icon"> <img src="../images/filter.svg" alt="Task Icon" width="20" height="20" fill="#0b8766"></span>
                     <select class="filter-select" id="statusFilter">
                         <option value="all">All Status</option>
                         <option value="Pending" selected>Pending</option>

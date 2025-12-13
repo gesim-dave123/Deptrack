@@ -147,18 +147,27 @@ body {
 }
 
 .notification-icon {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%; /* Make icon container round */
+  width: 24px;
+  height: 24px;
+  border-radius: 10%; /* Make icon container round */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 20px;
   font-size: 20px;
+  filter: invert(26%) sepia(77%) saturate(3077%) hue-rotate(153deg)
+    brightness(91%) contrast(91%);
   /* Use a white or light icon color */
   color: var(--card-background);
   /* Adding a subtle inner shadow to the icon */
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.notification-icon svg {
+  width: 24px;
+  height: 24px;
+  filter: invert(26%) sepia(77%) saturate(3077%) hue-rotate(153deg)
+    brightness(91%) contrast(91%);
 }
 
 .notification-item.unread .notification-text strong {

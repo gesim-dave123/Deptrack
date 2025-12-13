@@ -178,7 +178,7 @@
         </div>
     </div>
 
-    <script>
+    <script> 
         const tasksData = <?php echo json_encode($taskData); ?>;
         const activePage = window.location.pathname.split("/").pop();
         const navItems = document.querySelectorAll(".nav-item a");

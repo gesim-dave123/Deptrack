@@ -31,7 +31,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notifications</title>
-    <link rel="stylesheet" href="../styles/notification.css?v=6.0">
+    <link rel="stylesheet" href="../styles/notification.css?v=7.0">
     <link rel="stylesheet" href="../styles/nav.css?v=2.0">
 </head>
 <body>
@@ -58,8 +58,9 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
     </div>
 
     <script>
-        // Inject PHP data directly into JavaScript
-        const notificationsData = <?php echo json_encode($taskData); ?>;
+            const notificationsData = <?php echo json_encode($taskData); ?>;
+  
+       
         
         function renderNotifications() {
             const list = document.getElementById('notificationList');
@@ -73,7 +74,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])){
             list.innerHTML = data.map((item, index) => `
                 <div class="notification-item ${item.is_read == 0 ? 'unread' : 'read'}" 
                     onclick="openModal(${index}, this)">
-                    <img class="notification-icon" src="../images/noti.png" alt="Notifications">
+                    <img class="notification-icon" src="../images/task-checklist.svg"  alt="Task Icon" width="35" height="35" fill="#0b8766">
                     <div class="notification-text">
                         <strong>Task Update: "${item.task_title}"</strong>. ${item.message} (${item.created_At.split(" ")[0]})
                     </div>
